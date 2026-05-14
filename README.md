@@ -1,31 +1,40 @@
-# Express.js on Vercel
+# GitHub Stats Generator
 
-Basic Express.js + Vercel example that serves html content, JSON data and simulates an api route.
+English-only SVG GitHub stats cards for profile READMEs.
 
-## How to Use
+## Endpoints
 
-You can choose from one of the following two methods to use this repository:
-
-### One-Click Deploy
-
-Deploy the example using [Vercel](https://vercel.com?utm_source=github&utm_medium=readme&utm_campaign=vercel-examples):
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https://github.com/vercel/examples/tree/main/solutions/express&project-name=express&repository-name=express)
-
-### Clone and Deploy
-
-```bash
-git clone https://github.com/vercel/examples/tree/main/solutions/express
+```md
+![GitHub stats](https://github-stats-generator-green.vercel.app/api/stats.svg?username=D-Naveenz)
+![Top languages](https://github-stats-generator-green.vercel.app/api/languages.svg?username=D-Naveenz)
 ```
 
-Install the Vercel CLI:
+## Options
 
-```bash
-npm i -g vercel
-```
+Shared options:
 
-Then run the app at the root of the repository:
+- `username` is required.
+- `theme`: `default`, `dark`, `github`, or `tokyonight`.
+- `title_color`, `text_color`, `bg_color`, `border_color`: 6-digit hex colors.
+- `hide_border`, `hide_title`: `true` or `false`.
+- `include_private`: requires the username to be listed in `PRIVATE_STATS_USERS`.
 
-```bash
-vercel dev
+Language card options:
+
+- `layout`: `bar` or `compact`.
+- `limit`: integer from `1` to `12`, default `6`.
+
+## Environment
+
+- `GITHUB_TOKEN`: server-side token used for GitHub API requests.
+- `PRIVATE_STATS_USERS`: comma-separated usernames allowed to request `include_private=true`.
+
+## Local Commands
+
+```powershell
+pnpm install
+pnpm dev
+pnpm typecheck
+pnpm test
+pnpm format:check
 ```

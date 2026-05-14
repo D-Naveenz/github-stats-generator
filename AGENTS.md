@@ -12,8 +12,9 @@ This workspace can use MindVault as optional local AI memory. Keep this file sho
 ## Local Commands
 
 - Install: `pnpm install`
-- Build: unknown
-- Test: unknown
+- Dev: `pnpm dev`
+- Build: `pnpm build`
+- Test: `pnpm test`
 - Validate: `.\node_modules\.bin\prettier.cmd --check .`
 
 ## Local Guardrails
