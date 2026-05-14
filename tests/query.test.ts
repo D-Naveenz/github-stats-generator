@@ -9,6 +9,18 @@ const baseConfig = loadConfig({
 })
 
 describe('query parsing', () => {
+    it('loads token and private stats allowlist from environment values', () => {
+        const config = loadConfig({
+            NODE_ENV: 'development',
+            GITHUB_TOKEN: 'test-token',
+            PRIVATE_STATS_USERS: ' Octocat, D-Naveenz ',
+        })
+
+        expect(config.githubToken).toBe('test-token')
+        expect(config.privateStatsUsers.has('octocat')).toBe(true)
+        expect(config.privateStatsUsers.has('d-naveenz')).toBe(true)
+    })
+
     it('requires a valid username', () => {
         expect(() => parseStatsCardQuery({}, baseConfig)).toThrow(
             'Missing or invalid username'

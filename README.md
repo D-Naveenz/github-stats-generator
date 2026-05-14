@@ -29,6 +29,16 @@ Language card options:
 - `GITHUB_TOKEN`: server-side token used for GitHub API requests.
 - `PRIVATE_STATS_USERS`: comma-separated usernames allowed to request `include_private=true`.
 
+For local development, create a `.env` file from `.env.example`:
+
+```env
+GITHUB_TOKEN=github_pat_your_token_here
+PRIVATE_STATS_USERS=D-Naveenz
+PORT=3000
+```
+
+Use a fine-grained GitHub PAT with read-only access for the data you want the cards to see. Public-only cards still use the token for GraphQL access and rate limits.
+
 ## Local Commands
 
 ```powershell
