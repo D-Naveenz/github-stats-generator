@@ -1,6 +1,6 @@
 import request from 'supertest'
 import { describe, expect, it } from 'vitest'
-import { createApp } from '../src/app.js'
+import app, { createApp } from '../src/app.js'
 import { loadConfig } from '../src/config.js'
 import type { GitHubStatsReader } from '../src/github/service.js'
 
@@ -36,6 +36,10 @@ function responseText(response: request.Response): string {
 }
 
 describe('routes', () => {
+    it('exports a default Express app for Vercel', () => {
+        expect(typeof app).toBe('function')
+    })
+
     it('serves stats SVG with cache headers', async () => {
         const app = createApp({ config, githubService: fakeService })
         const response = await request(app).get(

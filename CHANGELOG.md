@@ -8,6 +8,7 @@
 - Added core original-inspired themes: `radical`, `merko`, `gruvbox`, `onedark`, and `cobalt`.
 - Extended GitHub stats fetching with contribution commit count and contributed repository count.
 - Polished stats-card layout with fixed stat/value columns, dynamic card dimensions, centered rank text, tighter rank placement, and balanced padding.
+- Fixed Vercel Express template compatibility by default-exporting the Express app from `src/app.ts`.
 
 ## 0.1.0 - 2026-05-15
 

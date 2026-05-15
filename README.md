@@ -230,7 +230,7 @@ The project is designed for Vercel, but it is a standard Express app and can run
 4. Optionally add `PRIVATE_STATS_USERS`.
 5. Deploy from the main branch.
 
-The exported Express app lives in `src/index.ts`, which Vercel can use as the server entry.
+The exported Express app lives in `src/app.ts`, which Vercel can use as the server entry. `src/index.ts` re-exports the same app for local server startup.
 
 ### GitHub PAT
 
