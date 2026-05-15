@@ -25,12 +25,12 @@ const rankCircleCircumference = Math.round(Math.PI * rankCircleDiameter)
 const rankCircleMinBodyHeight = rankCircleDiameter + rankCircleStrokeWidth * 2
 const rankTextFontSize = 38
 const cardPadding = 24
+const cardPaddingBottom = 16
 const titleFontSize = 18
 const titleBaselineOffset = titleFontSize
-const titleToContentGap = 22
+const titleToContentGap = 26
 const defaultTableTop = 8
-const rankColumnGap = 48
-const iconColumnWidth = 28
+const rankColumnGap = 28
 const valueColumnXWithIcons = 150
 const valueColumnXWithoutIcons = 122
 const minTableWidth = 260
@@ -256,7 +256,7 @@ export function renderStatsCard(
         : titleBaselineOffset + titleToContentGap
     const cardWidth = Math.ceil(innerWidth + cardPadding * 2)
     const cardHeight = Math.ceil(
-        cardPadding + titleBlockHeight + bodyHeight + cardPadding
+        cardPadding + titleBlockHeight + bodyHeight + cardPaddingBottom
     )
 
     return renderCard({
