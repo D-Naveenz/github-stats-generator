@@ -35,14 +35,17 @@ export function createApp(options: CreateAppOptions = {}): Express {
   <body>
     <main>
       <h1>GitHub Stats Generator</h1>
-      <p>English-only SVG cards for GitHub READMEs.</p>
+      <p>English-only SVG cards for GitHub READMEs, with original-inspired stats content and a cleaner self-hosted API.</p>
       <section>
         <h2>Profile stats</h2>
         <code>![GitHub stats](${baseUrl}/api/stats.svg?username=D-Naveenz)</code>
+        <p>Try themes and options like <code>theme=radical</code>, <code>hide_rank=true</code>, or <code>hide=prs,issues</code>.</p>
+        <p><img src="${baseUrl}/api/stats.svg?username=D-Naveenz&theme=radical" alt="GitHub stats card preview" /></p>
       </section>
       <section>
         <h2>Top languages</h2>
         <code>![Top languages](${baseUrl}/api/languages.svg?username=D-Naveenz)</code>
+        <p><img src="${baseUrl}/api/languages.svg?username=D-Naveenz&layout=compact" alt="Top languages card preview" /></p>
       </section>
     </main>
   </body>

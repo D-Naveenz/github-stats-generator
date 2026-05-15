@@ -32,6 +32,10 @@ export function renderErrorCard(
             theme: 'default',
             hideBorder: false,
             hideTitle: false,
+            showIcons: false,
+            hideRank: true,
+            lineHeight: 25,
+            hide: [],
         },
         body,
     })

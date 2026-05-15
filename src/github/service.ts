@@ -12,8 +12,10 @@ export type ProfileStats = {
     repositories: number
     followers: number
     totalStars: number
+    totalCommits: number
     pullRequests: number
     issues: number
+    contributedTo: number
     contributions: number
     includePrivate: boolean
 }
@@ -56,8 +58,9 @@ type StatsResponse = {
         }
         pullRequests: { totalCount: number }
         issues: { totalCount: number }
+        repositoriesContributedTo: { totalCount: number }
         contributionsCollection: {
-            contributionCalendar: { totalContributions: number }
+            totalCommitContributions: number
         }
     }
 }
@@ -105,10 +108,11 @@ query ProfileStats($login: String!, $after: String, $repoPrivacy: RepositoryPriv
     issues(first: 1) {
       totalCount
     }
+    repositoriesContributedTo(first: 1, contributionTypes: [COMMIT, ISSUE, PULL_REQUEST, REPOSITORY]) {
+      totalCount
+    }
     contributionsCollection {
-      contributionCalendar {
-        totalContributions
-      }
+      totalCommitContributions
     }
   }
 }
@@ -198,11 +202,12 @@ export class GitHubStatsService implements GitHubStatsReader {
             repositories: user.repositories.totalCount,
             followers: user.followers.totalCount,
             totalStars,
+            totalCommits: user.contributionsCollection.totalCommitContributions,
             pullRequests: user.pullRequests.totalCount,
             issues: user.issues.totalCount,
+            contributedTo: user.repositoriesContributedTo.totalCount,
             contributions:
-                user.contributionsCollection.contributionCalendar
-                    .totalContributions,
+                user.contributionsCollection.totalCommitContributions,
             includePrivate: input.includePrivate,
         }
     }
@@ -250,7 +255,7 @@ export class GitHubStatsService implements GitHubStatsReader {
         if (!this.request) {
             throw new GitHubError(
                 'GitHub token is not configured',
-                'Set GITHUB_TOKEN in the deployment environment.'
+                'Set GH_PAT in the deployment environment.'
             )
         }
 

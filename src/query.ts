@@ -33,11 +33,19 @@ export type CommonCardOptions = {
     theme: CardThemeName
     titleColor?: string
     textColor?: string
+    iconColor?: string
+    ringColor?: string
     bgColor?: string
     borderColor?: string
     hideBorder: boolean
     hideTitle: boolean
+    showIcons: boolean
+    hideRank: boolean
+    lineHeight: number
+    hide: StatKey[]
 }
+
+export type StatKey = 'stars' | 'commits' | 'prs' | 'issues' | 'contribs'
 
 export type StatsCardQuery = {
     username: string
@@ -108,15 +116,64 @@ function parseColor(query: QuerySource, key: string): string | undefined {
     return result.data.startsWith('#') ? result.data : `#${result.data}`
 }
 
+function parseLineHeight(query: QuerySource): number {
+    const value = readString(query, 'line_height')
+    if (value === undefined) {
+        return 25
+    }
+
+    const parsed = Number.parseInt(value, 10)
+    if (!Number.isInteger(parsed) || parsed < 16 || parsed > 40) {
+        throw new QueryError('line_height must be an integer from 16 to 40')
+    }
+
+    return parsed
+}
+
+function parseHide(query: QuerySource): StatKey[] {
+    const value = readString(query, 'hide')
+    if (!value) {
+        return []
+    }
+
+    const validKeys = new Set<StatKey>([
+        'stars',
+        'commits',
+        'prs',
+        'issues',
+        'contribs',
+    ])
+    const keys = value
+        .split(',')
+        .map((item) => item.trim())
+        .filter(Boolean)
+
+    for (const key of keys) {
+        if (!validKeys.has(key as StatKey)) {
+            throw new QueryError(
+                'hide must contain only: stars, commits, prs, issues, contribs'
+            )
+        }
+    }
+
+    return keys as StatKey[]
+}
+
 function parseCommonCardOptions(query: QuerySource): CommonCardOptions {
     return {
         theme: parseTheme(query),
         titleColor: parseColor(query, 'title_color'),
         textColor: parseColor(query, 'text_color'),
+        iconColor: parseColor(query, 'icon_color'),
+        ringColor: parseColor(query, 'ring_color'),
         bgColor: parseColor(query, 'bg_color'),
         borderColor: parseColor(query, 'border_color'),
         hideBorder: parseBoolean(query, 'hide_border'),
         hideTitle: parseBoolean(query, 'hide_title'),
+        showIcons: parseBoolean(query, 'show_icons', true),
+        hideRank: parseBoolean(query, 'hide_rank'),
+        lineHeight: parseLineHeight(query),
+        hide: parseHide(query),
     }
 }
 

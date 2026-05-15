@@ -16,19 +16,19 @@ This project is a smaller, modern alternative inspired by GitHub Readme Stats. I
 - [Self-Hosting](#self-hosting)
 - [Local Development](#local-development)
 - [Environment Variables](#environment-variables)
-- [What V1 Does Not Support](#what-v1-does-not-support)
+- [What v0.2.0 Does Not Support](#what-v020-does-not-support)
 
 ## Features
 
-- Profile stats card as SVG.
+- Original-inspired profile stats card as SVG, inside this project's rounded frame.
 - Top languages card as SVG.
 - English-only labels.
-- Built-in themes: `default`, `dark`, `github`, and `tokyonight`.
-- Hex color overrides for title, text, background, and border.
+- Built-in themes: `default`, `dark`, `github`, `tokyonight`, `radical`, `merko`, `gruvbox`, `onedark`, and `cobalt`.
+- Hex color overrides for title, text, icons, rank ring, background, and border.
 - Optional hidden title and border.
 - Public stats by default.
 - Private-visible stats only when explicitly requested and allowlisted by the deployment owner.
-- GitHub GraphQL API access through a server-side `GITHUB_TOKEN`.
+- GitHub GraphQL API access through a server-side `GH_PAT`.
 - Vercel-friendly cache headers.
 - SVG error cards instead of JSON errors for README embeds.
 
@@ -63,27 +63,34 @@ Example:
 
 The stats card displays:
 
-- Display name or login.
-- Repository count.
-- Followers.
 - Total stars across owned non-fork repositories.
-- Pull request count.
-- Issue count.
-- Contribution calendar total.
+- Total commits from the GitHub GraphQL contribution commit count.
+- Total pull requests.
+- Total issues.
+- Contributed repository count.
+- Rank circle, visible by default.
+
+The v0.2.0 stats card uses original-inspired stat content inside this project's cleaner rounded frame. Rows are rendered in a fixed invisible table-like layout with icon, label, and bold value columns, while the rank circle is placed as a right-side column.
 
 ### Stats Card Options
 
-| Parameter         | Required | Values                                    | Default     | Description                                                    |
-| ----------------- | -------- | ----------------------------------------- | ----------- | -------------------------------------------------------------- |
-| `username`        | Yes      | GitHub login                              | none        | User to render stats for.                                      |
-| `theme`           | No       | `default`, `dark`, `github`, `tokyonight` | `default`   | Built-in card theme.                                           |
-| `title_color`     | No       | 6-digit hex                               | theme value | Header text color.                                             |
-| `text_color`      | No       | 6-digit hex                               | theme value | Main text color.                                               |
-| `bg_color`        | No       | 6-digit hex                               | theme value | Card background color.                                         |
-| `border_color`    | No       | 6-digit hex                               | theme value | Card border color.                                             |
-| `hide_border`     | No       | `true`, `false`                           | `false`     | Hides the border when true.                                    |
-| `hide_title`      | No       | `true`, `false`                           | `false`     | Hides the card title when true.                                |
-| `include_private` | No       | `true`, `false`                           | `false`     | Requests private-visible data, only for allowlisted usernames. |
+| Parameter         | Required | Values                                                                                           | Default     | Description                                                    |
+| ----------------- | -------- | ------------------------------------------------------------------------------------------------ | ----------- | -------------------------------------------------------------- |
+| `username`        | Yes      | GitHub login                                                                                     | none        | User to render stats for.                                      |
+| `theme`           | No       | `default`, `dark`, `github`, `tokyonight`, `radical`, `merko`, `gruvbox`, `onedark`, or `cobalt` | `default`   | Built-in card theme.                                           |
+| `title_color`     | No       | 6-digit hex                                                                                      | theme value | Header text color.                                             |
+| `text_color`      | No       | 6-digit hex                                                                                      | theme value | Main text color.                                               |
+| `icon_color`      | No       | 6-digit hex                                                                                      | theme value | Stat icon color.                                               |
+| `ring_color`      | No       | 6-digit hex                                                                                      | theme value | Rank circle color.                                             |
+| `bg_color`        | No       | 6-digit hex                                                                                      | theme value | Card background color.                                         |
+| `border_color`    | No       | 6-digit hex                                                                                      | theme value | Card border color.                                             |
+| `hide_border`     | No       | `true`, `false`                                                                                  | `false`     | Hides the border when true.                                    |
+| `hide_title`      | No       | `true`, `false`                                                                                  | `false`     | Hides the card title when true.                                |
+| `show_icons`      | No       | `true`, `false`                                                                                  | `true`      | Shows or hides stat icons.                                     |
+| `hide_rank`       | No       | `true`, `false`                                                                                  | `false`     | Shows or hides the rank circle.                                |
+| `line_height`     | No       | integer from `16` to `40`                                                                        | `25`        | Vertical spacing between stat rows.                            |
+| `hide`            | No       | `stars`, `commits`, `prs`, `issues`, `contribs`                                                  | none        | Comma-separated stat keys to hide.                             |
+| `include_private` | No       | `true`, `false`                                                                                  | `false`     | Requests private-visible data, only for allowlisted usernames. |
 
 ## Top Languages Card
 
@@ -117,19 +124,19 @@ Compact layout:
 
 ### Language Card Options
 
-| Parameter         | Required | Values                                    | Default     | Description                                                    |
-| ----------------- | -------- | ----------------------------------------- | ----------- | -------------------------------------------------------------- |
-| `username`        | Yes      | GitHub login                              | none        | User to render languages for.                                  |
-| `layout`          | No       | `bar`, `compact`                          | `bar`       | Language card layout.                                          |
-| `limit`           | No       | integer from `1` to `12`                  | `6`         | Maximum number of languages to show.                           |
-| `theme`           | No       | `default`, `dark`, `github`, `tokyonight` | `default`   | Built-in card theme.                                           |
-| `title_color`     | No       | 6-digit hex                               | theme value | Header text color.                                             |
-| `text_color`      | No       | 6-digit hex                               | theme value | Main text color.                                               |
-| `bg_color`        | No       | 6-digit hex                               | theme value | Card background color.                                         |
-| `border_color`    | No       | 6-digit hex                               | theme value | Card border color.                                             |
-| `hide_border`     | No       | `true`, `false`                           | `false`     | Hides the border when true.                                    |
-| `hide_title`      | No       | `true`, `false`                           | `false`     | Hides the card title when true.                                |
-| `include_private` | No       | `true`, `false`                           | `false`     | Requests private-visible data, only for allowlisted usernames. |
+| Parameter         | Required | Values                                                                                           | Default     | Description                                                    |
+| ----------------- | -------- | ------------------------------------------------------------------------------------------------ | ----------- | -------------------------------------------------------------- |
+| `username`        | Yes      | GitHub login                                                                                     | none        | User to render languages for.                                  |
+| `layout`          | No       | `bar`, `compact`                                                                                 | `bar`       | Language card layout.                                          |
+| `limit`           | No       | integer from `1` to `12`                                                                         | `6`         | Maximum number of languages to show.                           |
+| `theme`           | No       | `default`, `dark`, `github`, `tokyonight`, `radical`, `merko`, `gruvbox`, `onedark`, or `cobalt` | `default`   | Built-in card theme.                                           |
+| `title_color`     | No       | 6-digit hex                                                                                      | theme value | Header text color.                                             |
+| `text_color`      | No       | 6-digit hex                                                                                      | theme value | Main text color.                                               |
+| `bg_color`        | No       | 6-digit hex                                                                                      | theme value | Card background color.                                         |
+| `border_color`    | No       | 6-digit hex                                                                                      | theme value | Card border color.                                             |
+| `hide_border`     | No       | `true`, `false`                                                                                  | `false`     | Hides the border when true.                                    |
+| `hide_title`      | No       | `true`, `false`                                                                                  | `false`     | Hides the card title when true.                                |
+| `include_private` | No       | `true`, `false`                                                                                  | `false`     | Requests private-visible data, only for allowlisted usernames. |
 
 ## Themes and Styling
 
@@ -149,11 +156,16 @@ Supported themes:
 | `dark`       | Dark card using GitHub dark-style colors.   |
 | `github`     | Soft GitHub panel style with green accent.  |
 | `tokyonight` | Dark blue/purple Tokyo Night-style palette. |
+| `radical`    | Pink and cyan original-inspired palette.    |
+| `merko`      | Green-on-dark original-inspired palette.    |
+| `gruvbox`    | Warm Gruvbox dark palette.                  |
+| `onedark`    | One Dark-inspired palette.                  |
+| `cobalt`     | Blue Cobalt-inspired palette.               |
 
 You can override theme colors with 6-digit hex colors, with or without `#`:
 
 ```md
-![Custom stats](https://github-stats-generator-green.vercel.app/api/stats.svg?username=D-Naveenz&title_color=ffffff&text_color=c9d1d9&bg_color=0d1117&border_color=30363d)
+![Custom stats](https://github-stats-generator-green.vercel.app/api/stats.svg?username=D-Naveenz&title_color=ffffff&text_color=c9d1d9&icon_color=79ff97&ring_color=79ff97&bg_color=0d1117&border_color=30363d)
 ```
 
 GitHub README images can use theme fragments for light and dark mode:
@@ -169,7 +181,7 @@ Public stats are the default and are safe for any requested username.
 
 Private-visible stats require all of the following:
 
-- The deployment has a `GITHUB_TOKEN`.
+- The deployment has a `GH_PAT`.
 - The requested URL includes `include_private=true`.
 - The requested username is listed in `PRIVATE_STATS_USERS`.
 - The configured token can actually see the requested private data.
@@ -214,7 +226,7 @@ The project is designed for Vercel, but it is a standard Express app and can run
 
 1. Fork or clone this repository.
 2. Import it into Vercel.
-3. Add `GITHUB_TOKEN` in the Vercel project environment variables.
+3. Add `GH_PAT` in the Vercel project environment variables.
 4. Optionally add `PRIVATE_STATS_USERS`.
 5. Deploy from the main branch.
 
@@ -222,7 +234,7 @@ The exported Express app lives in `src/index.ts`, which Vercel can use as the se
 
 ### GitHub PAT
 
-Use a fine-grained or classic GitHub Personal Access Token as the server-side `GITHUB_TOKEN`.
+Use a fine-grained or classic GitHub Personal Access Token as the server-side `GH_PAT`.
 
 Recommended minimum:
 
@@ -243,7 +255,7 @@ pnpm install
 Create a local `.env` from `.env.example`:
 
 ```env
-GITHUB_TOKEN=github_pat_your_token_here
+GH_PAT=github_pat_your_token_here
 PRIVATE_STATS_USERS=D-Naveenz
 PORT=3000
 ```
@@ -278,21 +290,19 @@ VS Code tasks are included for development, testing, formatting, and full valida
 
 | Variable              | Required                 | Example             | Description                                                          |
 | --------------------- | ------------------------ | ------------------- | -------------------------------------------------------------------- |
-| `GITHUB_TOKEN`        | Yes for live GitHub data | `github_pat_...`    | Server-side GitHub token used for GraphQL API calls.                 |
+| `GH_PAT`              | Yes for live GitHub data | `github_pat_...`    | Server-side GitHub token used for GraphQL API calls.                 |
 | `PRIVATE_STATS_USERS` | No                       | `D-Naveenz,octocat` | Comma-separated usernames allowed to request `include_private=true`. |
 | `PORT`                | No                       | `3000`              | Local dev server port.                                               |
 | `NODE_ENV`            | No                       | `development`       | Disables cache headers when set to `development`.                    |
 
-## What V1 Does Not Support
+## What v0.2.0 Does Not Support
 
-V1 intentionally does not support:
+v0.2.0 intentionally does not support:
 
 - Multilingual labels.
 - Repo pin cards.
 - Gist cards.
 - WakaTime cards.
-- Rank calculation.
-- Icon toggles.
 - Legacy `github-readme-stats` route or parameter compatibility.
 - Passing GitHub tokens through query parameters.
 - Per-request private stats for arbitrary users.
