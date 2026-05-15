@@ -70,6 +70,8 @@ The stats card displays:
 - Contributed repository count.
 - Rank circle, visible by default.
 
+The v0.2.0 stats card uses original-inspired stat content inside this project's cleaner rounded frame. Rows are rendered in a fixed invisible table-like layout with icon, label, and bold value columns, while the rank circle is placed as a right-side column.
+
 ### Stats Card Options
 
 | Parameter         | Required | Values                                                                                           | Default     | Description                                                    |
@@ -122,19 +124,19 @@ Compact layout:
 
 ### Language Card Options
 
-| Parameter         | Required | Values                                    | Default     | Description                                                    |
-| ----------------- | -------- | ----------------------------------------- | ----------- | -------------------------------------------------------------- |
-| `username`        | Yes      | GitHub login                              | none        | User to render languages for.                                  |
-| `layout`          | No       | `bar`, `compact`                          | `bar`       | Language card layout.                                          |
-| `limit`           | No       | integer from `1` to `12`                  | `6`         | Maximum number of languages to show.                           |
-| `theme`           | No       | `default`, `dark`, `github`, `tokyonight` | `default`   | Built-in card theme.                                           |
-| `title_color`     | No       | 6-digit hex                               | theme value | Header text color.                                             |
-| `text_color`      | No       | 6-digit hex                               | theme value | Main text color.                                               |
-| `bg_color`        | No       | 6-digit hex                               | theme value | Card background color.                                         |
-| `border_color`    | No       | 6-digit hex                               | theme value | Card border color.                                             |
-| `hide_border`     | No       | `true`, `false`                           | `false`     | Hides the border when true.                                    |
-| `hide_title`      | No       | `true`, `false`                           | `false`     | Hides the card title when true.                                |
-| `include_private` | No       | `true`, `false`                           | `false`     | Requests private-visible data, only for allowlisted usernames. |
+| Parameter         | Required | Values                                                                                           | Default     | Description                                                    |
+| ----------------- | -------- | ------------------------------------------------------------------------------------------------ | ----------- | -------------------------------------------------------------- |
+| `username`        | Yes      | GitHub login                                                                                     | none        | User to render languages for.                                  |
+| `layout`          | No       | `bar`, `compact`                                                                                 | `bar`       | Language card layout.                                          |
+| `limit`           | No       | integer from `1` to `12`                                                                         | `6`         | Maximum number of languages to show.                           |
+| `theme`           | No       | `default`, `dark`, `github`, `tokyonight`, `radical`, `merko`, `gruvbox`, `onedark`, or `cobalt` | `default`   | Built-in card theme.                                           |
+| `title_color`     | No       | 6-digit hex                                                                                      | theme value | Header text color.                                             |
+| `text_color`      | No       | 6-digit hex                                                                                      | theme value | Main text color.                                               |
+| `bg_color`        | No       | 6-digit hex                                                                                      | theme value | Card background color.                                         |
+| `border_color`    | No       | 6-digit hex                                                                                      | theme value | Card border color.                                             |
+| `hide_border`     | No       | `true`, `false`                                                                                  | `false`     | Hides the border when true.                                    |
+| `hide_title`      | No       | `true`, `false`                                                                                  | `false`     | Hides the card title when true.                                |
+| `include_private` | No       | `true`, `false`                                                                                  | `false`     | Requests private-visible data, only for allowlisted usernames. |
 
 ## Themes and Styling
 
