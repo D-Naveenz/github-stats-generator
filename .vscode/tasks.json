@@ -1,0 +1,73 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "pnpm: dev",
+            "type": "shell",
+            "command": "pnpm dev",
+            "isBackground": true,
+            "problemMatcher": {
+                "owner": "typescript",
+                "pattern": {
+                    "regexp": "^(.*)$",
+                    "message": 1
+                },
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": "^\\$ tsc",
+                    "endsPattern": "GitHub Stats Generator listening on http://localhost:[0-9]+"
+                }
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "pnpm: build",
+            "type": "shell",
+            "command": "pnpm build",
+            "problemMatcher": "$tsc",
+            "group": "build"
+        },
+        {
+            "label": "pnpm: typecheck",
+            "type": "shell",
+            "command": "pnpm typecheck",
+            "problemMatcher": "$tsc",
+            "group": "build"
+        },
+        {
+            "label": "pnpm: test",
+            "type": "shell",
+            "command": "pnpm test",
+            "problemMatcher": [],
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "pnpm: format check",
+            "type": "shell",
+            "command": "pnpm format:check",
+            "problemMatcher": []
+        },
+        {
+            "label": "pnpm: validate",
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "pnpm: build",
+                "pnpm: typecheck",
+                "pnpm: test",
+                "pnpm: format check"
+            ],
+            "problemMatcher": [],
+            "group": "build"
+        }
+    ]
+}
