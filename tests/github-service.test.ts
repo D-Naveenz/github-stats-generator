@@ -16,8 +16,9 @@ describe('GitHubStatsService', () => {
                     },
                     pullRequests: { totalCount: 11 },
                     issues: { totalCount: 12 },
+                    repositoriesContributedTo: { totalCount: 14 },
                     contributionsCollection: {
-                        contributionCalendar: { totalContributions: 13 },
+                        totalCommitContributions: 13,
                     },
                 },
             }),
@@ -31,6 +32,8 @@ describe('GitHubStatsService', () => {
         ).resolves.toMatchObject({
             username: 'octocat',
             totalStars: 10,
+            totalCommits: 13,
+            contributedTo: 14,
             repositories: 2,
             includePrivate: false,
         })

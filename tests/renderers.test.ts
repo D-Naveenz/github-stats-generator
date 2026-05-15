@@ -16,6 +16,10 @@ const cardOptions = {
     theme: 'default' as const,
     hideBorder: false,
     hideTitle: false,
+    showIcons: true,
+    hideRank: false,
+    lineHeight: 25,
+    hide: [],
 }
 
 describe('SVG renderers', () => {
@@ -27,8 +31,10 @@ describe('SVG renderers', () => {
                 repositories: 8,
                 followers: 1200,
                 totalStars: 42,
+                totalCommits: 365,
                 pullRequests: 100,
                 issues: 12,
+                contributedTo: 9,
                 contributions: 365,
                 includePrivate: false,
             },
@@ -37,7 +43,39 @@ describe('SVG renderers', () => {
 
         expectValidSvg(svg)
         expect(svg).toContain('Octocat&apos;s GitHub Stats')
-        expect(svg).toContain('Public Repos')
+        expect(svg).toContain('Total Stars')
+        expect(svg).toContain('Total Commits')
+        expect(svg).toContain('Total PRs')
+        expect(svg).toContain('Total Issues')
+        expect(svg).toContain('Contributed to')
+        expect(svg).toContain('data-testid="icon"')
+        expect(svg).toContain('data-testid="rank-circle"')
+        expect(svg).toContain('class="stat-value"')
+    })
+
+    it('hides configured stats and rank circle', () => {
+        const svg = renderStatsCard(
+            {
+                username: 'octocat',
+                name: 'Octocat',
+                repositories: 8,
+                followers: 1200,
+                totalStars: 42,
+                totalCommits: 365,
+                pullRequests: 100,
+                issues: 12,
+                contributedTo: 9,
+                contributions: 365,
+                includePrivate: false,
+            },
+            { ...cardOptions, hideRank: true, hide: ['prs', 'issues'] }
+        )
+
+        expectValidSvg(svg)
+        expect(svg).not.toContain('data-testid="rank-circle"')
+        expect(svg).not.toContain('Total PRs')
+        expect(svg).not.toContain('Total Issues')
+        expect(svg).toContain('Total Stars')
     })
 
     it('renders a valid languages card', () => {
@@ -75,8 +113,10 @@ describe('SVG renderers', () => {
                 repositories: 1,
                 followers: 1,
                 totalStars: 1,
+                totalCommits: 1,
                 pullRequests: 1,
                 issues: 1,
+                contributedTo: 1,
                 contributions: 1,
                 includePrivate: false,
             },

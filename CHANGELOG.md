@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.0 - 2026-05-15
+
+- Upgraded the stats card to an original-inspired stat list inside this project's rounded frame.
+- Added stat icons, bold stat values, default rank circle, and rank calculation.
+- Added stats-card options for `show_icons`, `hide_rank`, `line_height`, `icon_color`, `ring_color`, and `hide`.
+- Added core original-inspired themes: `radical`, `merko`, `gruvbox`, `onedark`, and `cobalt`.
+- Extended GitHub stats fetching with contribution commit count and contributed repository count.
+
 ## 0.1.0 - 2026-05-15
 
 Initial usable release.

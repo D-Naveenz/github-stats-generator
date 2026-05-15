@@ -47,10 +47,7 @@ export function element(
     attrs: Attributes = {},
     content?: string
 ): string {
-    if (
-        content !== undefined &&
-        !['text', 'title', 'desc', 'tspan'].includes(name)
-    ) {
+    if (content !== undefined) {
         return rawElement(name, attrs, content)
     }
 

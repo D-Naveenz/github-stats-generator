@@ -18,8 +18,10 @@ const fakeService: GitHubStatsReader = {
             repositories: 1,
             followers: 2,
             totalStars: 3,
+            totalCommits: 6,
             pullRequests: 4,
             issues: 5,
+            contributedTo: 7,
             contributions: 6,
             includePrivate: input.includePrivate,
         }
@@ -44,6 +46,8 @@ describe('routes', () => {
         expect(response.headers['content-type']).toContain('image/svg+xml')
         expect(response.headers['cache-control']).toContain('s-maxage=86400')
         expect(responseText(response)).toContain('Octocat&apos;s GitHub Stats')
+        expect(responseText(response)).toContain('Total Commits')
+        expect(responseText(response)).toContain('data-testid="rank-circle"')
     })
 
     it('serves languages SVG', async () => {

@@ -36,6 +36,10 @@ export function renderCard(args: CardArgs): string {
         .header { font: 600 18px 'Segoe UI', Ubuntu, sans-serif; fill: ${theme.titleColor}; }
         .label { font: 500 12px 'Segoe UI', Ubuntu, sans-serif; fill: ${theme.mutedTextColor}; }
         .value { font: 700 18px 'Segoe UI', Ubuntu, sans-serif; fill: ${theme.textColor}; }
+        .stat-label { font: 700 14px 'Segoe UI', Ubuntu, sans-serif; fill: ${theme.textColor}; }
+        .stat-value { font: 700 14px 'Segoe UI', Ubuntu, sans-serif; fill: ${theme.textColor}; }
+        .icon { fill: ${theme.iconColor}; }
+        .rank-text { font: 800 24px 'Segoe UI', Ubuntu, sans-serif; fill: ${theme.textColor}; }
         .small { font: 500 12px 'Segoe UI', Ubuntu, sans-serif; fill: ${theme.textColor}; }
         .muted { font: 500 12px 'Segoe UI', Ubuntu, sans-serif; fill: ${theme.mutedTextColor}; }
         .error-title { font: 700 16px 'Segoe UI', Ubuntu, sans-serif; fill: ${theme.errorColor}; }
