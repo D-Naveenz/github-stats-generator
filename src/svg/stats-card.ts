@@ -18,12 +18,19 @@ type StatItem = {
     value: number
 }
 
+const rankCircleRadius = 52
+const rankCircleStrokeWidth = 8
+const rankCircleDiameter = rankCircleRadius * 2
+const rankCircleCircumference = Math.round(Math.PI * rankCircleDiameter)
+const rankCircleMinBodyHeight = rankCircleDiameter + rankCircleStrokeWidth * 2
+
 function statRow(args: {
     y: number
     label: string
     value: string
     icon: string
     showIcon: boolean
+    valueX: number
 }): string {
     const icon = args.showIcon
         ? element(
@@ -40,7 +47,7 @@ function statRow(args: {
               args.icon
           )
         : ''
-    const textX = args.showIcon ? 28 : 0
+    const labelX = args.showIcon ? 28 : 0
 
     return element(
         'g',
@@ -49,57 +56,67 @@ function statRow(args: {
             icon,
             element(
                 'text',
-                { x: textX, y: 0 },
-                [
-                    element(
-                        'tspan',
-                        { class: 'stat-label' },
-                        `${escapeXml(args.label)}: `
-                    ),
-                    element(
-                        'tspan',
-                        { class: 'stat-value', 'font-weight': 700 },
-                        escapeXml(args.value)
-                    ),
-                ].join('')
+                { x: labelX, y: 0, class: 'stat-label' },
+                `${escapeXml(args.label)}:`
+            ),
+            element(
+                'text',
+                {
+                    x: args.valueX,
+                    y: 0,
+                    class: 'stat-value',
+                    'font-weight': 700,
+                },
+                escapeXml(args.value)
             ),
         ].join('')
     )
 }
 
 function circleProgress(percentile: number): number {
-    const radius = 40
-    const circumference = Math.PI * (radius * 2)
     const progress = Math.max(0, Math.min(100, 100 - percentile))
-    return ((100 - progress) / 100) * circumference
+    return ((100 - progress) / 100) * rankCircleCircumference
 }
 
-function rankCircle(stats: ProfileStats, options: CommonCardOptions): string {
+function rankTableVisualOffset(): number {
+    return Math.ceil(rankCircleDiameter / 6)
+}
+
+function rankCircle(args: {
+    stats: ProfileStats
+    options: CommonCardOptions
+    x: number
+    y: number
+}): string {
+    const { stats, options } = args
     const theme = resolveTheme(options.theme, options)
     const rank = calculateRank(stats)
 
     return element(
         'g',
-        { transform: 'translate(395, 52)', 'data-testid': 'rank-circle' },
+        {
+            transform: `translate(${args.x}, ${args.y})`,
+            'data-testid': 'rank-circle',
+        },
         [
             element('circle', {
                 cx: 0,
                 cy: 0,
-                r: 40,
+                r: rankCircleRadius,
                 fill: 'none',
                 stroke: theme.ringColor,
-                'stroke-width': 6,
+                'stroke-width': rankCircleStrokeWidth,
                 'stroke-opacity': 0.2,
             }),
             element('circle', {
                 cx: 0,
                 cy: 0,
-                r: 40,
+                r: rankCircleRadius,
                 fill: 'none',
                 stroke: theme.ringColor,
-                'stroke-width': 6,
+                'stroke-width': rankCircleStrokeWidth,
                 'stroke-linecap': 'round',
-                'stroke-dasharray': 250,
+                'stroke-dasharray': rankCircleCircumference,
                 'stroke-dashoffset': circleProgress(rank.percentile),
                 transform: 'rotate(-90)',
             }),
@@ -156,6 +173,22 @@ export function renderStatsCard(
         },
     ]
     const hidden = new Set(options.hide)
+    const visibleRowCount = statItems.filter(
+        (item) => !hidden.has(item.key)
+    ).length
+    const tableTop = 8
+    const tableHeight =
+        visibleRowCount > 0
+            ? (visibleRowCount - 1) * options.lineHeight + 24
+            : 24
+    const bodyHeight = Math.max(
+        tableTop + tableHeight,
+        options.hideRank ? 0 : tableTop + rankCircleMinBodyHeight
+    )
+    const rankX = options.showIcons ? 350 : 315
+    const rankY =
+        tableTop + Math.round(tableHeight / 2) - rankTableVisualOffset()
+    const valueX = options.showIcons ? 150 : 122
     const rows = statItems
         .filter((item) => !hidden.has(item.key))
         .map((item, index) =>
@@ -165,21 +198,20 @@ export function renderStatsCard(
                 value: formatNumber(item.value),
                 icon: item.icon,
                 showIcon: options.showIcons,
+                valueX,
             })
         )
         .join('')
     const body = [
-        rows,
-        options.hideRank ? '' : rankCircle(stats, options),
+        element('g', { transform: `translate(0, ${tableTop})` }, rows),
+        options.hideRank
+            ? ''
+            : rankCircle({ stats, options, x: rankX, y: rankY }),
     ].join('')
-    const bodyHeight = Math.max(
-        options.hideRank ? 0 : 120,
-        Math.max(1, statItems.length - hidden.size) * options.lineHeight
-    )
 
     return renderCard({
-        width: options.hideRank ? 360 : 520,
-        height: (options.hideTitle ? 48 : 90) + bodyHeight,
+        width: options.hideRank ? 360 : 460,
+        height: (options.hideTitle ? 48 : 74) + bodyHeight,
         title,
         description: `${stats.username} has ${stats.totalStars} stars, ${stats.totalCommits} commits, ${stats.pullRequests} pull requests, ${stats.issues} issues, and contributed to ${stats.contributedTo} repositories.`,
         options,
