@@ -4,7 +4,7 @@ import { parseLanguageCardQuery, parseStatsCardQuery } from '../src/query.js'
 
 const baseConfig = loadConfig({
     NODE_ENV: 'test',
-    GITHUB_TOKEN: 'token',
+    GH_PAT: 'token',
     PRIVATE_STATS_USERS: 'octocat',
 })
 
@@ -12,7 +12,7 @@ describe('query parsing', () => {
     it('loads token and private stats allowlist from environment values', () => {
         const config = loadConfig({
             NODE_ENV: 'development',
-            GITHUB_TOKEN: 'test-token',
+            GH_PAT: 'test-token',
             PRIVATE_STATS_USERS: ' Octocat, D-Naveenz ',
         })
 

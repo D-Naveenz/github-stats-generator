@@ -250,7 +250,7 @@ export class GitHubStatsService implements GitHubStatsReader {
         if (!this.request) {
             throw new GitHubError(
                 'GitHub token is not configured',
-                'Set GITHUB_TOKEN in the deployment environment.'
+                'Set GH_PAT in the deployment environment.'
             )
         }
 

@@ -28,7 +28,7 @@ This project is a smaller, modern alternative inspired by GitHub Readme Stats. I
 - Optional hidden title and border.
 - Public stats by default.
 - Private-visible stats only when explicitly requested and allowlisted by the deployment owner.
-- GitHub GraphQL API access through a server-side `GITHUB_TOKEN`.
+- GitHub GraphQL API access through a server-side `GH_PAT`.
 - Vercel-friendly cache headers.
 - SVG error cards instead of JSON errors for README embeds.
 
@@ -169,7 +169,7 @@ Public stats are the default and are safe for any requested username.
 
 Private-visible stats require all of the following:
 
-- The deployment has a `GITHUB_TOKEN`.
+- The deployment has a `GH_PAT`.
 - The requested URL includes `include_private=true`.
 - The requested username is listed in `PRIVATE_STATS_USERS`.
 - The configured token can actually see the requested private data.
@@ -214,7 +214,7 @@ The project is designed for Vercel, but it is a standard Express app and can run
 
 1. Fork or clone this repository.
 2. Import it into Vercel.
-3. Add `GITHUB_TOKEN` in the Vercel project environment variables.
+3. Add `GH_PAT` in the Vercel project environment variables.
 4. Optionally add `PRIVATE_STATS_USERS`.
 5. Deploy from the main branch.
 
@@ -222,7 +222,7 @@ The exported Express app lives in `src/index.ts`, which Vercel can use as the se
 
 ### GitHub PAT
 
-Use a fine-grained or classic GitHub Personal Access Token as the server-side `GITHUB_TOKEN`.
+Use a fine-grained or classic GitHub Personal Access Token as the server-side `GH_PAT`.
 
 Recommended minimum:
 
@@ -243,7 +243,7 @@ pnpm install
 Create a local `.env` from `.env.example`:
 
 ```env
-GITHUB_TOKEN=github_pat_your_token_here
+GH_PAT=github_pat_your_token_here
 PRIVATE_STATS_USERS=D-Naveenz
 PORT=3000
 ```
@@ -278,7 +278,7 @@ VS Code tasks are included for development, testing, formatting, and full valida
 
 | Variable              | Required                 | Example             | Description                                                          |
 | --------------------- | ------------------------ | ------------------- | -------------------------------------------------------------------- |
-| `GITHUB_TOKEN`        | Yes for live GitHub data | `github_pat_...`    | Server-side GitHub token used for GraphQL API calls.                 |
+| `GH_PAT`              | Yes for live GitHub data | `github_pat_...`    | Server-side GitHub token used for GraphQL API calls.                 |
 | `PRIVATE_STATS_USERS` | No                       | `D-Naveenz,octocat` | Comma-separated usernames allowed to request `include_private=true`. |
 | `PORT`                | No                       | `3000`              | Local dev server port.                                               |
 | `NODE_ENV`            | No                       | `development`       | Disables cache headers when set to `development`.                    |
