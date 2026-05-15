@@ -15,7 +15,7 @@ Initial usable release.
 
 - Added English-only SVG cards for profile stats and top languages.
 - Added clean endpoints: `/api/stats.svg` and `/api/languages.svg`.
-- Added GitHub GraphQL access through server-side `GH_PAT`.
+- Added GitHub GraphQL access through server-side `GITHUB_TOKEN`.
 - Added opt-in private-visible stats with `PRIVATE_STATS_USERS` allowlist.
 - Added built-in themes, hex color overrides, hidden title, and hidden border options.
 - Added Vercel-friendly cache headers and SVG error cards.

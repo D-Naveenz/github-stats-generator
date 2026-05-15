@@ -6,7 +6,7 @@ import type { GitHubStatsReader } from '../src/github/service.js'
 
 const config = loadConfig({
     NODE_ENV: 'production',
-    GH_PAT: 'token',
+    GITHUB_TOKEN: 'token',
     PRIVATE_STATS_USERS: 'octocat',
 })
 
