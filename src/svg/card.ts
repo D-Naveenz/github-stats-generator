@@ -11,18 +11,24 @@ type CardArgs = {
     description: string
     options: RenderCardOptions
     body: string
+    contentX?: number
+    contentY?: number
+    titleX?: number
+    titleY?: number
 }
 
 export function renderCard(args: CardArgs): string {
     const theme = resolveTheme(args.options.theme, args.options)
     const titleHeight = args.options.hideTitle ? 0 : 42
+    const contentX = args.contentX ?? 24
+    const contentY = args.contentY ?? titleHeight + 20
     const title = args.options.hideTitle
         ? ''
         : element(
               'text',
               {
-                  x: 24,
-                  y: 32,
+                  x: args.titleX ?? 24,
+                  y: args.titleY ?? 32,
                   class: 'header',
               },
               escapeXml(args.title)
@@ -39,7 +45,7 @@ export function renderCard(args: CardArgs): string {
         .stat-label { font: 500 14px 'Segoe UI', Ubuntu, sans-serif; fill: ${theme.textColor}; }
         .stat-value { font: 700 14px 'Segoe UI', Ubuntu, sans-serif; fill: ${theme.textColor}; }
         .icon { fill: ${theme.iconColor}; }
-        .rank-text { font: 800 36px 'Segoe UI', Ubuntu, sans-serif; fill: ${theme.textColor}; }
+        .rank-text { font-family: 'Segoe UI', Ubuntu, sans-serif; font-weight: 800; fill: ${theme.textColor}; }
         .small { font: 500 12px 'Segoe UI', Ubuntu, sans-serif; fill: ${theme.textColor}; }
         .muted { font: 500 12px 'Segoe UI', Ubuntu, sans-serif; fill: ${theme.mutedTextColor}; }
         .error-title { font: 700 16px 'Segoe UI', Ubuntu, sans-serif; fill: ${theme.errorColor}; }
@@ -60,7 +66,7 @@ export function renderCard(args: CardArgs): string {
         element(
             'g',
             {
-                transform: `translate(24, ${titleHeight + 20})`,
+                transform: `translate(${contentX}, ${contentY})`,
             },
             args.body
         ),

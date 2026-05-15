@@ -23,6 +23,17 @@ const rankCircleStrokeWidth = 8
 const rankCircleDiameter = rankCircleRadius * 2
 const rankCircleCircumference = Math.round(Math.PI * rankCircleDiameter)
 const rankCircleMinBodyHeight = rankCircleDiameter + rankCircleStrokeWidth * 2
+const rankTextFontSize = 38
+const cardPadding = 24
+const titleFontSize = 18
+const titleBaselineOffset = titleFontSize
+const titleToContentGap = 22
+const defaultTableTop = 8
+const rankColumnGap = 48
+const iconColumnWidth = 28
+const valueColumnXWithIcons = 150
+const valueColumnXWithoutIcons = 122
+const minTableWidth = 260
 
 function statRow(args: {
     y: number
@@ -82,6 +93,14 @@ function rankTableVisualOffset(): number {
     return Math.ceil(rankCircleDiameter / 6)
 }
 
+function rankTextBaselineOffset(): number {
+    return Math.round(rankTextFontSize * 0.35)
+}
+
+function estimateTextWidth(text: string, fontSize: number): number {
+    return Math.ceil(text.length * fontSize * 0.56)
+}
+
 function rankCircle(args: {
     stats: ProfileStats
     options: CommonCardOptions
@@ -124,8 +143,9 @@ function rankCircle(args: {
                 'text',
                 {
                     x: 0,
-                    y: 8,
+                    y: rankTextBaselineOffset(),
                     class: 'rank-text',
+                    'font-size': rankTextFontSize,
                     'text-anchor': 'middle',
                     'data-testid': 'level-rank-icon',
                 },
@@ -173,10 +193,11 @@ export function renderStatsCard(
         },
     ]
     const hidden = new Set(options.hide)
+    const visibleItems = statItems.filter((item) => !hidden.has(item.key))
     const visibleRowCount = statItems.filter(
         (item) => !hidden.has(item.key)
     ).length
-    const tableTop = 8
+    const tableTop = defaultTableTop
     const tableHeight =
         visibleRowCount > 0
             ? (visibleRowCount - 1) * options.lineHeight + 24
@@ -185,10 +206,24 @@ export function renderStatsCard(
         tableTop + tableHeight,
         options.hideRank ? 0 : tableTop + rankCircleMinBodyHeight
     )
-    const rankX = options.showIcons ? 350 : 315
+    const valueX = options.showIcons
+        ? valueColumnXWithIcons
+        : valueColumnXWithoutIcons
+    const longestValue = visibleItems.reduce(
+        (longest, item) => Math.max(longest, formatNumber(item.value).length),
+        1
+    )
+    const tableWidth = Math.max(
+        minTableWidth,
+        valueX + estimateTextWidth('8'.repeat(longestValue), 14)
+    )
+    const rankX =
+        tableWidth +
+        rankColumnGap +
+        rankCircleRadius +
+        rankCircleStrokeWidth / 2
     const rankY =
         tableTop + Math.round(tableHeight / 2) - rankTableVisualOffset()
-    const valueX = options.showIcons ? 150 : 122
     const rows = statItems
         .filter((item) => !hidden.has(item.key))
         .map((item, index) =>
@@ -208,13 +243,32 @@ export function renderStatsCard(
             ? ''
             : rankCircle({ stats, options, x: rankX, y: rankY }),
     ].join('')
+    const rankWidth = options.hideRank
+        ? 0
+        : rankX + rankCircleRadius + rankCircleStrokeWidth / 2
+    const contentWidth = Math.max(tableWidth, rankWidth)
+    const titleWidth = options.hideTitle
+        ? 0
+        : estimateTextWidth(title, titleFontSize)
+    const innerWidth = Math.max(contentWidth, titleWidth)
+    const titleBlockHeight = options.hideTitle
+        ? 0
+        : titleBaselineOffset + titleToContentGap
+    const cardWidth = Math.ceil(innerWidth + cardPadding * 2)
+    const cardHeight = Math.ceil(
+        cardPadding + titleBlockHeight + bodyHeight + cardPadding
+    )
 
     return renderCard({
-        width: options.hideRank ? 360 : 460,
-        height: (options.hideTitle ? 48 : 74) + bodyHeight,
+        width: cardWidth,
+        height: cardHeight,
         title,
         description: `${stats.username} has ${stats.totalStars} stars, ${stats.totalCommits} commits, ${stats.pullRequests} pull requests, ${stats.issues} issues, and contributed to ${stats.contributedTo} repositories.`,
         options,
         body,
+        contentX: cardPadding,
+        contentY: cardPadding + titleBlockHeight,
+        titleX: cardPadding,
+        titleY: cardPadding + titleBaselineOffset,
     })
 }
