@@ -1,25 +1,28 @@
 import type { DisplayError } from '../errors.js'
-import { element, escapeXml } from './builder.js'
+import { escapeXml } from './builder.js'
 import { renderCard } from './card.js'
+import type { SvgChild } from './compiler/index.js'
 
 export function renderErrorCard(
     error: DisplayError,
     options: { title: string }
 ): string {
-    const body = [
-        element(
-            'text',
-            { x: 0, y: 0, class: 'error-title' },
-            escapeXml(error.message)
-        ),
+    const body: SvgChild[] = [
+        {
+            tag: 'text',
+            styleKey: 'errorTitle',
+            style: { x: 0, y: 0 },
+            children: [escapeXml(error.message)],
+        },
         error.secondaryMessage
-            ? element(
-                  'text',
-                  { x: 0, y: 24, class: 'error-text' },
-                  escapeXml(error.secondaryMessage)
-              )
+            ? {
+                  tag: 'text',
+                  styleKey: 'errorText',
+                  style: { x: 0, y: 24 },
+                  children: [escapeXml(error.secondaryMessage)],
+              }
             : '',
-    ].join('')
+    ]
 
     return renderCard({
         width: 420,

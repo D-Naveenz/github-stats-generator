@@ -4,7 +4,9 @@ import {
     matchesSelector,
     parseSpacing,
     resolveMargin,
+    resolveNodeResource,
     resolveStyle,
+    type StyleResources,
     type SvgNode,
 } from '../src/svg/compiler/index.js'
 
@@ -75,6 +77,72 @@ describe('SVG compiler selectors', () => {
             y: 2,
             width: 100,
         })
+    })
+})
+
+describe('SVG compiler style resources', () => {
+    const resources: StyleResources = {
+        textBase: {
+            attrs: { fill: '#111111', font: '500 12px sans-serif' },
+            layout: { x: 2, height: 10 },
+        },
+        cardTitle: {
+            basedOn: 'textBase',
+            attrs: { class: 'card-title', fill: '#0969da' },
+            layout: { marginBottom: 12 },
+        },
+        circularA: { basedOn: 'circularB' },
+        circularB: { basedOn: 'circularA' },
+    }
+
+    it('applies keyed resources to attrs and layout', () => {
+        const svg = compileSvg(
+            [
+                {
+                    tag: 'text',
+                    styleKey: 'cardTitle',
+                    children: ['Title'],
+                },
+            ],
+            [],
+            resources
+        )
+
+        expect(svg).toContain(
+            '<text fill="#0969da" font="500 12px sans-serif" class="card-title" x="2">Title</text>'
+        )
+    })
+
+    it('resolves basedOn inheritance before node overrides', () => {
+        const node: SvgNode = {
+            tag: 'text',
+            styleKey: 'cardTitle',
+            attrs: { fill: '#222222' },
+            style: { x: 8 },
+        }
+
+        expect(resolveNodeResource(node, resources)).toEqual({
+            attrs: {
+                fill: '#0969da',
+                font: '500 12px sans-serif',
+                class: 'card-title',
+            },
+            layout: {
+                x: 2,
+                height: 10,
+                marginBottom: 12,
+            },
+        })
+
+        const svg = compileSvg([node], [], resources)
+        expect(svg).toContain('fill="#222222"')
+        expect(svg).toContain('x="8"')
+    })
+
+    it('rejects circular basedOn chains', () => {
+        expect(() =>
+            compileSvg([{ tag: 'text', styleKey: 'circularA' }], [], resources)
+        ).toThrow('Circular SVG style resource inheritance')
     })
 })
 
@@ -152,5 +220,32 @@ describe('SVG compiler layout', () => {
         expect(svg).toContain(
             '<rect class="surface" width="20" height="10" x="12" y="4">'
         )
+    })
+
+    it('uses styleKey resources for reusable layout', () => {
+        const svg = compileSvg(
+            [
+                {
+                    tag: 'g',
+                    styleKey: 'stackItem',
+                    children: [{ tag: 'text', children: ['Row'] }],
+                },
+                {
+                    tag: 'g',
+                    styleKey: 'stackItem',
+                    children: [{ tag: 'text', children: ['Next'] }],
+                },
+            ],
+            [],
+            {
+                stackItem: {
+                    attrs: { class: 'stack-item' },
+                    layout: { height: 10, marginBottom: 5 },
+                },
+            }
+        )
+
+        expect(svg).toContain('class="stack-item" transform="translate(0, 0)"')
+        expect(svg).toContain('class="stack-item" transform="translate(0, 15)"')
     })
 })

@@ -1,6 +1,7 @@
 import type { CommonCardOptions } from '../../query.js'
 import { escapeXml } from '../builder.js'
 import { resolveTheme, type ThemeOverrides } from '../themes.js'
+import { createCardStyles } from '../styles.js'
 import { compileSvg } from './compiler.js'
 import type { SvgChild, SvgNode } from './types.js'
 
@@ -18,38 +19,11 @@ export type CompilerCardArgs = {
     titleY?: number
 }
 
-function cardStyle(options: CompilerCardOptions): SvgNode {
-    const theme = resolveTheme(options.theme, options)
-
-    return {
-        tag: 'style',
-        children: [
-            `
-        .header { font: 600 18px 'Segoe UI', Ubuntu, sans-serif; fill: ${theme.titleColor}; }
-        .label { font: 500 12px 'Segoe UI', Ubuntu, sans-serif; fill: ${theme.mutedTextColor}; }
-        .value { font: 700 18px 'Segoe UI', Ubuntu, sans-serif; fill: ${theme.textColor}; }
-        .stat-label { font: 500 14px 'Segoe UI', Ubuntu, sans-serif; fill: ${theme.textColor}; }
-        .stat-value { font: 700 14px 'Segoe UI', Ubuntu, sans-serif; fill: ${theme.textColor}; }
-        .icon { fill: ${theme.iconColor}; }
-        .rank-text { font-family: 'Segoe UI', Ubuntu, sans-serif; font-weight: 800; fill: ${theme.textColor}; }
-        .small { font: 500 12px 'Segoe UI', Ubuntu, sans-serif; fill: ${theme.textColor}; }
-        .muted { font: 500 12px 'Segoe UI', Ubuntu, sans-serif; fill: ${theme.mutedTextColor}; }
-        .error-title { font: 700 16px 'Segoe UI', Ubuntu, sans-serif; fill: ${theme.errorColor}; }
-        .error-text { font: 500 12px 'Segoe UI', Ubuntu, sans-serif; fill: ${theme.textColor}; }
-      `,
-        ],
-    }
-}
-
 function cardBackground(args: CompilerCardArgs): SvgNode {
-    const theme = resolveTheme(args.options.theme, args.options)
-
     return {
         tag: 'rect',
+        styleKey: 'cardSurface',
         attrs: {
-            rx: 8,
-            fill: theme.bgColor,
-            stroke: theme.borderColor,
             'stroke-opacity': args.options.hideBorder ? 0 : 1,
         },
         style: {
@@ -68,9 +42,7 @@ function titleNode(args: CompilerCardArgs): SvgNode | undefined {
 
     return {
         tag: 'text',
-        attrs: {
-            class: 'header',
-        },
+        styleKey: 'cardTitle',
         style: {
             x: args.titleX ?? 24,
             y: args.titleY ?? 32,
@@ -85,6 +57,7 @@ function contentNode(args: CompilerCardArgs): SvgNode {
 
     return {
         tag: 'g',
+        styleKey: 'cardContent',
         style: {
             x: args.contentX ?? 24,
             y: args.contentY ?? titleHeight + 20,
@@ -94,12 +67,13 @@ function contentNode(args: CompilerCardArgs): SvgNode {
 }
 
 export function renderCompilerCardContent(args: CompilerCardArgs): string {
+    const theme = resolveTheme(args.options.theme, args.options)
+    const styles = createCardStyles(theme)
     const nodes = [
-        cardStyle(args.options),
         cardBackground(args),
         titleNode(args),
         contentNode(args),
     ].filter((node): node is SvgNode => node !== undefined)
 
-    return compileSvg(nodes)
+    return compileSvg(nodes, [], styles)
 }

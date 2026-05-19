@@ -43,9 +43,9 @@ function statRow(args: {
     const icon: SvgNode | undefined = args.showIcon
         ? {
               tag: 'svg',
+              styleKey: 'statIcon',
               attrs: {
                   viewBox: '0 0 16 16',
-                  class: 'icon',
                   'data-testid': 'icon',
               },
               style: {
@@ -61,24 +61,24 @@ function statRow(args: {
 
     return {
         tag: 'g',
+        styleKey: 'statRow',
         style: {
-            height: 0,
             marginBottom: args.marginBottom,
         },
         children: [
             icon,
             {
                 tag: 'text',
-                attrs: { class: 'stat-label' },
+                styleKey: 'statLabel',
                 style: { x: labelX, y: 0 },
                 children: [`${escapeXml(args.label)}:`],
             },
             {
                 tag: 'text',
                 attrs: {
-                    class: 'stat-value',
                     'font-weight': 700,
                 },
+                styleKey: 'statValue',
                 style: { x: args.valueX, y: 0 },
                 children: [escapeXml(args.value)],
             },
@@ -148,8 +148,8 @@ function rankCircle(args: {
             },
             {
                 tag: 'text',
+                styleKey: 'rankText',
                 attrs: {
-                    class: 'rank-text',
                     'font-size': rankTextFontSize,
                     'text-anchor': 'middle',
                     'data-testid': 'level-rank-icon',

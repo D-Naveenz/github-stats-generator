@@ -21,8 +21,19 @@ export type LayoutStyle = {
 
 export type SvgChild = SvgNode | string
 
+export type SvgStyleKey = string
+
+export type StyleResource = {
+    basedOn?: SvgStyleKey
+    attrs?: Attributes
+    layout?: LayoutStyle
+}
+
+export type StyleResources = Record<SvgStyleKey, StyleResource>
+
 export type SvgNode = {
     tag: string
+    styleKey?: SvgStyleKey
     attrs?: Attributes
     children?: SvgChild[]
     selectors?: string[]

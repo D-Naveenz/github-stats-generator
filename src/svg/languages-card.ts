@@ -38,7 +38,7 @@ function topLanguages(languages: TopLanguage[], limit: number): TopLanguage[] {
 function renderEmptyState(): SvgNode {
     return {
         tag: 'text',
-        attrs: { class: 'small' },
+        styleKey: 'languageLabel',
         style: { x: 0, y: 0 },
         children: ['No language data found'],
     }
@@ -56,21 +56,21 @@ function renderBarLayout(
         const width = Math.max(2, (percent / 100) * barWidth)
         return {
             tag: 'g',
+            styleKey: 'languageRow',
             style: {
-                height: 0,
                 marginBottom: index === languages.length - 1 ? 0 : barRowGap,
             },
             children: [
                 {
                     tag: 'text',
-                    attrs: { class: 'small' },
+                    styleKey: 'languageLabel',
                     style: { x: 0, y: barLabelY },
                     children: [escapeXml(language.name)],
                 },
                 {
                     tag: 'text',
+                    styleKey: 'languagePercent',
                     attrs: {
-                        class: 'muted',
                         'text-anchor': 'end',
                     },
                     style: { x: barPercentX, y: barY + barHeight },
@@ -132,7 +132,7 @@ function renderCompactLayout(
                 },
                 {
                     tag: 'text',
-                    attrs: { class: 'small' },
+                    styleKey: 'languageLabel',
                     style: { x: 18, y: 0 },
                     children: [
                         escapeXml(`${language.name} ${formatPercent(percent)}`),
