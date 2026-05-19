@@ -311,6 +311,8 @@ Run locally:
 pnpm dev
 ```
 
+`pnpm dev` uses `tsx watch`, so source changes restart the local Express server automatically. Use `pnpm dev:compiled` when you specifically want to test the compiled `.dev-dist` runtime path.
+
 Open:
 
 ```txt

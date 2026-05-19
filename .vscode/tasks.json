@@ -14,7 +14,7 @@
                 },
                 "background": {
                     "activeOnStart": true,
-                    "beginsPattern": "^\\$ tsc",
+                    "beginsPattern": "^\\$ tsx watch",
                     "endsPattern": "GitHub Stats Generator listening on http://localhost:[0-9]+"
                 }
             },
@@ -26,6 +26,29 @@
                 "kind": "build",
                 "isDefault": true
             }
+        },
+        {
+            "label": "pnpm: dev compiled",
+            "type": "shell",
+            "command": "pnpm dev:compiled",
+            "isBackground": true,
+            "problemMatcher": {
+                "owner": "typescript",
+                "pattern": {
+                    "regexp": "^(.*)$",
+                    "message": 1
+                },
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": "^\\$ tsc",
+                    "endsPattern": "GitHub Stats Generator listening on http://localhost:[0-9]+"
+                }
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            },
+            "group": "build"
         },
         {
             "label": "pnpm: build",
