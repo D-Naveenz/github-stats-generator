@@ -13,3 +13,16 @@ img {
 code {
     overflow-wrap: anywhere;
 }
+.preview-row {
+    align-items: flex-start;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+figure {
+    margin: 0;
+}
+figcaption {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}

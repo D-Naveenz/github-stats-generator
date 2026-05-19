@@ -86,7 +86,18 @@ The hosted Vercel app can be used directly in GitHub profile READMEs.
 
 ### Top Languages
 
-![Languages demo](https://github-stats-generator-green.vercel.app/api/languages.svg?username=D-Naveenz&layout=compact&theme=tokyonight)
+<p>
+  <img src="https://github-stats-generator-green.vercel.app/api/languages.svg?username=D-Naveenz&layout=bar&theme=tokyonight" alt="Top languages bar layout demo" />
+  <img src="https://github-stats-generator-green.vercel.app/api/languages.svg?username=D-Naveenz&layout=compact&theme=tokyonight" alt="Top languages compact layout demo" />
+</p>
+
+#### Top Languages - Bar Layout
+
+```md
+![Top languages](https://github-stats-generator-green.vercel.app/api/languages.svg?username=D-Naveenz&layout=bar&theme=tokyonight)
+```
+
+#### Top Languages - Compact Layout
 
 ```md
 ![Top languages](https://github-stats-generator-green.vercel.app/api/languages.svg?username=D-Naveenz&layout=compact&theme=tokyonight)
@@ -151,7 +162,7 @@ Example:
 ![Top languages](https://github-stats-generator-green.vercel.app/api/languages.svg?username=D-Naveenz&layout=compact&limit=8)
 ```
 
-The languages card aggregates language byte sizes from owned, non-fork repositories and sorts languages by total size.
+The languages card aggregates language byte sizes from owned, non-fork repositories and sorts languages by total size. The default `bar` layout shows each language with a progress bar, while `compact` gives a denser two-column summary.
 
 ### Language Layouts
 

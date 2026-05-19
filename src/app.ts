@@ -21,8 +21,10 @@ export function createApp(options: CreateAppOptions = {}): Express {
         new GitHubStatsService({ token: config.githubToken })
     const app = express()
 
-    app.get('/', (_req, res) => {
-        const baseUrl = 'https://github-stats-generator-green.vercel.app'
+    app.get('/', (req, res) => {
+        const protocol = req.get('x-forwarded-proto') ?? req.protocol
+        const host = req.get('x-forwarded-host') ?? req.get('host')
+        const baseUrl = `${protocol}://${host ?? 'localhost:3000'}`
 
         res.type('html').send(`<!doctype html>
 <html lang="en">
@@ -45,7 +47,16 @@ export function createApp(options: CreateAppOptions = {}): Express {
       <section>
         <h2>Top languages</h2>
         <code>![Top languages](${baseUrl}/api/languages.svg?username=D-Naveenz)</code>
-        <p><img src="${baseUrl}/api/languages.svg?username=D-Naveenz&layout=compact" alt="Top languages card preview" /></p>
+        <div class="preview-row">
+          <figure>
+            <figcaption>Bar layout</figcaption>
+            <img src="${baseUrl}/api/languages.svg?username=D-Naveenz&layout=bar" alt="Top languages bar layout preview" />
+          </figure>
+          <figure>
+            <figcaption>Compact layout</figcaption>
+            <img src="${baseUrl}/api/languages.svg?username=D-Naveenz&layout=compact" alt="Top languages compact layout preview" />
+          </figure>
+        </div>
       </section>
     </main>
   </body>

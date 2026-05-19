@@ -40,6 +40,21 @@ describe('routes', () => {
         expect(typeof app).toBe('function')
     })
 
+    it('serves homepage demos from the current request host', async () => {
+        const app = createApp({ config, githubService: fakeService })
+        const response = await request(app)
+            .get('/')
+            .set('host', 'localhost:3000')
+
+        expect(response.status).toBe(200)
+        expect(responseText(response)).toContain(
+            'http://localhost:3000/api/languages.svg?username=D-Naveenz&layout=bar'
+        )
+        expect(responseText(response)).not.toContain(
+            'https://github-stats-generator-green.vercel.app/api/languages.svg'
+        )
+    })
+
     it('serves stats SVG with cache headers', async () => {
         const app = createApp({ config, githubService: fakeService })
         const response = await request(app).get(
