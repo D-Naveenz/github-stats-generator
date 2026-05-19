@@ -92,6 +92,23 @@ describe('SVG renderers', () => {
         expect(svg).toContain('70.0%')
     })
 
+    it('renders a compact languages card with computed dimensions', () => {
+        const svg = renderLanguagesCard(
+            [
+                { name: 'TypeScript', color: '#3178c6', size: 70 },
+                { name: 'JavaScript', color: '#f1e05a', size: 20 },
+                { name: 'HTML', color: '#e34c26', size: 10 },
+            ],
+            { ...cardOptions, layout: 'compact', limit: 6 }
+        )
+
+        expectValidSvg(svg)
+        expect(svg).toContain('width="416"')
+        expect(svg).toContain('height="134"')
+        expect(svg).toContain('TypeScript 70.0%')
+        expect(svg).toContain('HTML 10.0%')
+    })
+
     it('renders a valid error card', () => {
         const svg = renderErrorCard(
             {
@@ -105,7 +122,7 @@ describe('SVG renderers', () => {
         expect(svg).toContain('Missing username')
     })
 
-    it('escapes dangerous text', () => {
+    it('escapes dangerous stats text', () => {
         const svg = renderStatsCard(
             {
                 username: 'octocat',
@@ -121,6 +138,16 @@ describe('SVG renderers', () => {
                 includePrivate: false,
             },
             cardOptions
+        )
+
+        expect(svg).toContain('&lt;script&gt;')
+        expect(svg).not.toContain('<script>')
+    })
+
+    it('escapes dangerous language text', () => {
+        const svg = renderLanguagesCard(
+            [{ name: '<script>alert(1)</script>', color: '#3178c6', size: 1 }],
+            { ...cardOptions, layout: 'bar', limit: 6 }
         )
 
         expect(svg).toContain('&lt;script&gt;')
