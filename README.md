@@ -8,6 +8,7 @@ This project is a smaller, modern alternative inspired by GitHub Readme Stats. I
 
 - [Features](#features)
 - [Quick Start](#quick-start)
+- [Live Demos](#live-demos)
 - [GitHub Stats Card](#github-stats-card)
 - [Top Languages Card](#top-languages-card)
 - [Themes and Styling](#themes-and-styling)
@@ -45,6 +46,50 @@ Use standard Markdown image syntax, or wrap the image in a link:
 
 ```md
 [![GitHub stats](https://github-stats-generator-green.vercel.app/api/stats.svg?username=D-Naveenz)](https://github.com/D-Naveenz)
+```
+
+## Live Demos
+
+The hosted Vercel app can be used directly in GitHub profile READMEs.
+
+### Default Stats Card
+
+![Default stats demo](https://github-stats-generator-green.vercel.app/api/stats.svg?username=D-Naveenz)
+
+```md
+![GitHub stats](https://github-stats-generator-green.vercel.app/api/stats.svg?username=D-Naveenz)
+```
+
+### Original-Inspired Theme
+
+![Radical stats demo](https://github-stats-generator-green.vercel.app/api/stats.svg?username=D-Naveenz&theme=radical)
+
+```md
+![GitHub stats](https://github-stats-generator-green.vercel.app/api/stats.svg?username=D-Naveenz&theme=radical)
+```
+
+### Custom Colors
+
+![Custom stats demo](https://github-stats-generator-green.vercel.app/api/stats.svg?username=D-Naveenz&title_color=2f80ed&text_color=111827&icon_color=4f6ef7&ring_color=4f6ef7&bg_color=ffffff&border_color=d0d7de)
+
+```md
+![Custom stats](https://github-stats-generator-green.vercel.app/api/stats.svg?username=D-Naveenz&title_color=2f80ed&text_color=111827&icon_color=4f6ef7&ring_color=4f6ef7&bg_color=ffffff&border_color=d0d7de)
+```
+
+### Compact Stats Without Rank
+
+![Compact stats demo](https://github-stats-generator-green.vercel.app/api/stats.svg?username=D-Naveenz&hide_rank=true&hide=prs,issues)
+
+```md
+![Compact stats](https://github-stats-generator-green.vercel.app/api/stats.svg?username=D-Naveenz&hide_rank=true&hide=prs,issues)
+```
+
+### Top Languages
+
+![Languages demo](https://github-stats-generator-green.vercel.app/api/languages.svg?username=D-Naveenz&layout=compact&theme=tokyonight)
+
+```md
+![Top languages](https://github-stats-generator-green.vercel.app/api/languages.svg?username=D-Naveenz&layout=compact&theme=tokyonight)
 ```
 
 ## GitHub Stats Card
