@@ -3,9 +3,28 @@ import type { LanguageCardQuery } from '../query.js'
 import { element, escapeXml } from './builder.js'
 import { renderCard } from './card.js'
 import { formatPercent } from './format.js'
+import { cardLayout, estimateTextWidth, titleBlockHeight } from './layout.js'
 import { resolveTheme } from './themes.js'
 
 type LanguageCardOptions = LanguageCardQuery['card']
+
+const barWidth = 300
+const barPercentGap = 48
+const barPercentX = barWidth + barPercentGap
+const barLayoutWidth = barPercentX
+const barRowGap = 35
+const barLabelToBarGap = 7
+const barLabelY = 0
+const barY = barLabelY + barLabelToBarGap
+const barHeight = 8
+const barRowHeight = barY + barHeight
+const barVisibleTop = -12
+const barVisibleBottom = barRowHeight
+const compactColumnGap = 28
+const compactColumnWidth = 170
+const compactRowGap = 28
+const compactRowHeight = 14
+const emptyStateHeight = 14
 
 function normalizeColor(color: string): string {
     return /^#[0-9a-f]{6}$/i.test(color) ? color : '#858585'
@@ -29,13 +48,12 @@ function renderBarLayout(
     options: LanguageCardOptions
 ): string {
     const theme = resolveTheme(options.theme, options)
-    const barWidth = 220
 
     return languages
         .map((language, index) => {
             const percent =
                 totalSize === 0 ? 0 : (language.size / totalSize) * 100
-            const y = index * 34
+            const y = index * barRowGap
             const width = Math.max(2, (percent / 100) * barWidth)
             return element(
                 'g',
@@ -43,27 +61,32 @@ function renderBarLayout(
                 [
                     element(
                         'text',
-                        { x: 0, y: 0, class: 'small' },
+                        { x: 0, y: barLabelY, class: 'small' },
                         escapeXml(language.name)
                     ),
                     element(
                         'text',
-                        { x: 350, y: 0, class: 'muted', 'text-anchor': 'end' },
+                        {
+                            x: barPercentX,
+                            y: barY + barHeight,
+                            class: 'muted',
+                            'text-anchor': 'end',
+                        },
                         escapeXml(formatPercent(percent))
                     ),
                     element('rect', {
                         x: 0,
-                        y: 10,
+                        y: barY,
                         width: barWidth,
-                        height: 8,
+                        height: barHeight,
                         rx: 4,
                         fill: theme.barBgColor,
                     }),
                     element('rect', {
                         x: 0,
-                        y: 10,
+                        y: barY,
                         width,
-                        height: 8,
+                        height: barHeight,
                         rx: 4,
                         fill: normalizeColor(language.color),
                     }),
@@ -83,8 +106,8 @@ function renderCompactLayout(
                 totalSize === 0 ? 0 : (language.size / totalSize) * 100
             const column = index % 2
             const row = Math.floor(index / 2)
-            const x = column * 190
-            const y = row * 28
+            const x = column * (compactColumnWidth + compactColumnGap)
+            const y = row * compactRowGap
             return element(
                 'g',
                 { transform: `translate(${x}, ${y})` },
@@ -106,6 +129,40 @@ function renderCompactLayout(
         .join('')
 }
 
+function bodyMetrics(
+    visibleLanguages: TopLanguage[],
+    options: LanguageCardOptions
+): { width: number; height: number; visibleTop: number } {
+    if (visibleLanguages.length === 0) {
+        return {
+            width: estimateTextWidth('No language data found', 12),
+            height: emptyStateHeight,
+            visibleTop: -12,
+        }
+    }
+
+    if (options.layout === 'compact') {
+        const columnCount = Math.min(visibleLanguages.length, 2)
+        const rowCount = Math.ceil(visibleLanguages.length / 2)
+        return {
+            width:
+                columnCount * compactColumnWidth +
+                (columnCount - 1) * compactColumnGap,
+            height: (rowCount - 1) * compactRowGap + compactRowHeight,
+            visibleTop: -12,
+        }
+    }
+
+    return {
+        width: barLayoutWidth,
+        height:
+            (visibleLanguages.length - 1) * barRowGap +
+            barVisibleBottom -
+            barVisibleTop,
+        visibleTop: barVisibleTop,
+    }
+}
+
 export function renderLanguagesCard(
     languages: TopLanguage[],
     options: LanguageCardOptions
@@ -121,21 +178,34 @@ export function renderLanguagesCard(
             : options.layout === 'compact'
               ? renderCompactLayout(visibleLanguages, totalSize)
               : renderBarLayout(visibleLanguages, totalSize, options)
-    const rowCount =
-        options.layout === 'compact'
-            ? Math.ceil(Math.max(visibleLanguages.length, 1) / 2)
-            : Math.max(visibleLanguages.length, 1)
-    const bodyHeight =
-        options.layout === 'compact' ? rowCount * 28 : rowCount * 34
+    const metrics = bodyMetrics(visibleLanguages, options)
+    const titleWidth = options.hideTitle
+        ? 0
+        : estimateTextWidth('Top Languages', cardLayout.titleFontSize)
+    const titleHeight = titleBlockHeight(options.hideTitle)
+    const cardWidth = Math.ceil(
+        Math.max(metrics.width, titleWidth) + cardLayout.padding * 2
+    )
+    const cardHeight = Math.ceil(
+        cardLayout.padding +
+            titleHeight +
+            metrics.height +
+            cardLayout.paddingBottom
+    )
+    const contentY = cardLayout.padding + titleHeight
 
     return renderCard({
-        width: 420,
-        height: (options.hideTitle ? 54 : 96) + bodyHeight,
+        width: cardWidth,
+        height: cardHeight,
         title: 'Top Languages',
         description: visibleLanguages
             .map((language) => language.name)
             .join(', '),
         options,
         body,
+        contentX: cardLayout.padding,
+        contentY,
+        titleX: cardLayout.padding,
+        titleY: cardLayout.padding + cardLayout.titleBaselineOffset,
     })
 }

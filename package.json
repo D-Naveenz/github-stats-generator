@@ -1,6 +1,6 @@
 {
     "name": "github-stats-generator",
-    "version": "0.2.4",
+    "version": "0.3.0",
     "description": "English-only SVG GitHub stats cards for READMEs",
     "type": "module",
     "keywords": [],
@@ -22,12 +22,14 @@
         "lint-staged": "^17.0.4",
         "prettier": "3.8.3",
         "supertest": "^7.2.2",
+        "tsx": "^4.22.1",
         "typescript": "^6.0.3",
         "vitest": "^4.1.6"
     },
     "scripts": {
         "build": "tsc --noEmit",
-        "dev": "tsc -p tsconfig.runtime.json --outDir .dev-dist && node .dev-dist/src/server.js",
+        "dev": "tsx watch src/server.ts",
+        "dev:compiled": "tsc -p tsconfig.runtime.json --outDir .dev-dist && node .dev-dist/src/server.js",
         "typecheck": "tsc --noEmit",
         "test": "vitest run",
         "format:check": "prettier --check .",

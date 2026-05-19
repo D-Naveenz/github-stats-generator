@@ -5,6 +5,7 @@ import { element, escapeXml } from './builder.js'
 import { renderCard } from './card.js'
 import { formatNumber } from './format.js'
 import { statIcons } from './icons.js'
+import { cardLayout, estimateTextWidth, titleBlockHeight } from './layout.js'
 import { resolveTheme } from './themes.js'
 
 function possessive(name: string): string {
@@ -24,11 +25,6 @@ const rankCircleDiameter = rankCircleRadius * 2
 const rankCircleCircumference = Math.round(Math.PI * rankCircleDiameter)
 const rankCircleMinBodyHeight = rankCircleDiameter + rankCircleStrokeWidth * 2
 const rankTextFontSize = 38
-const cardPadding = 24
-const cardPaddingBottom = 16
-const titleFontSize = 18
-const titleBaselineOffset = titleFontSize
-const titleToContentGap = 26
 const defaultTableTop = 8
 const rankColumnGap = 28
 const valueColumnXWithIcons = 150
@@ -95,10 +91,6 @@ function rankTableVisualOffset(): number {
 
 function rankTextBaselineOffset(): number {
     return Math.round(rankTextFontSize * 0.35)
-}
-
-function estimateTextWidth(text: string, fontSize: number): number {
-    return Math.ceil(text.length * fontSize * 0.56)
 }
 
 function rankCircle(args: {
@@ -249,14 +241,12 @@ export function renderStatsCard(
     const contentWidth = Math.max(tableWidth, rankWidth)
     const titleWidth = options.hideTitle
         ? 0
-        : estimateTextWidth(title, titleFontSize)
+        : estimateTextWidth(title, cardLayout.titleFontSize)
     const innerWidth = Math.max(contentWidth, titleWidth)
-    const titleBlockHeight = options.hideTitle
-        ? 0
-        : titleBaselineOffset + titleToContentGap
-    const cardWidth = Math.ceil(innerWidth + cardPadding * 2)
+    const titleHeight = titleBlockHeight(options.hideTitle)
+    const cardWidth = Math.ceil(innerWidth + cardLayout.padding * 2)
     const cardHeight = Math.ceil(
-        cardPadding + titleBlockHeight + bodyHeight + cardPaddingBottom
+        cardLayout.padding + titleHeight + bodyHeight + cardLayout.paddingBottom
     )
 
     return renderCard({
@@ -266,9 +256,9 @@ export function renderStatsCard(
         description: `${stats.username} has ${stats.totalStars} stars, ${stats.totalCommits} commits, ${stats.pullRequests} pull requests, ${stats.issues} issues, and contributed to ${stats.contributedTo} repositories.`,
         options,
         body,
-        contentX: cardPadding,
-        contentY: cardPadding + titleBlockHeight,
-        titleX: cardPadding,
-        titleY: cardPadding + titleBaselineOffset,
+        contentX: cardLayout.padding,
+        contentY: cardLayout.padding + titleHeight,
+        titleX: cardLayout.padding,
+        titleY: cardLayout.padding + cardLayout.titleBaselineOffset,
     })
 }

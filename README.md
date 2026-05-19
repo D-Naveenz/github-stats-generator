@@ -8,6 +8,7 @@ This project is a smaller, modern alternative inspired by GitHub Readme Stats. I
 
 - [Features](#features)
 - [Quick Start](#quick-start)
+- [Live Demos](#live-demos)
 - [GitHub Stats Card](#github-stats-card)
 - [Top Languages Card](#top-languages-card)
 - [Themes and Styling](#themes-and-styling)
@@ -16,7 +17,7 @@ This project is a smaller, modern alternative inspired by GitHub Readme Stats. I
 - [Self-Hosting](#self-hosting)
 - [Local Development](#local-development)
 - [Environment Variables](#environment-variables)
-- [What v0.2.4 Does Not Support](#what-v024-does-not-support)
+- [What v0.3.0 Does Not Support](#what-v030-does-not-support)
 
 ## Features
 
@@ -47,6 +48,61 @@ Use standard Markdown image syntax, or wrap the image in a link:
 [![GitHub stats](https://github-stats-generator-green.vercel.app/api/stats.svg?username=D-Naveenz)](https://github.com/D-Naveenz)
 ```
 
+## Live Demos
+
+The hosted Vercel app can be used directly in GitHub profile READMEs.
+
+### Default Stats Card
+
+![Default stats demo](https://github-stats-generator-green.vercel.app/api/stats.svg?username=D-Naveenz)
+
+```md
+![GitHub stats](https://github-stats-generator-green.vercel.app/api/stats.svg?username=D-Naveenz)
+```
+
+### Original-Inspired Theme
+
+![Radical stats demo](https://github-stats-generator-green.vercel.app/api/stats.svg?username=D-Naveenz&theme=radical)
+
+```md
+![GitHub stats](https://github-stats-generator-green.vercel.app/api/stats.svg?username=D-Naveenz&theme=radical)
+```
+
+### Custom Colors
+
+![Custom stats demo](https://github-stats-generator-green.vercel.app/api/stats.svg?username=D-Naveenz&title_color=2f80ed&text_color=111827&icon_color=4f6ef7&ring_color=4f6ef7&bg_color=ffffff&border_color=d0d7de)
+
+```md
+![Custom stats](https://github-stats-generator-green.vercel.app/api/stats.svg?username=D-Naveenz&title_color=2f80ed&text_color=111827&icon_color=4f6ef7&ring_color=4f6ef7&bg_color=ffffff&border_color=d0d7de)
+```
+
+### Compact Stats Without Rank
+
+![Compact stats demo](https://github-stats-generator-green.vercel.app/api/stats.svg?username=D-Naveenz&hide_rank=true&hide=prs,issues)
+
+```md
+![Compact stats](https://github-stats-generator-green.vercel.app/api/stats.svg?username=D-Naveenz&hide_rank=true&hide=prs,issues)
+```
+
+### Top Languages
+
+<p>
+  <img src="https://github-stats-generator-green.vercel.app/api/languages.svg?username=D-Naveenz&layout=bar&theme=tokyonight" alt="Top languages bar layout demo" />
+  <img src="https://github-stats-generator-green.vercel.app/api/languages.svg?username=D-Naveenz&layout=compact&theme=tokyonight" alt="Top languages compact layout demo" />
+</p>
+
+#### Top Languages - Bar Layout
+
+```md
+![Top languages](https://github-stats-generator-green.vercel.app/api/languages.svg?username=D-Naveenz&layout=bar&theme=tokyonight)
+```
+
+#### Top Languages - Compact Layout
+
+```md
+![Top languages](https://github-stats-generator-green.vercel.app/api/languages.svg?username=D-Naveenz&layout=compact&theme=tokyonight)
+```
+
 ## GitHub Stats Card
 
 Endpoint:
@@ -70,7 +126,7 @@ The stats card displays:
 - Contributed repository count.
 - Rank circle, visible by default.
 
-The v0.2.4 stats card uses original-inspired stat content inside this project's cleaner rounded frame. Rows are rendered in a fixed invisible table-like layout with icon, label, and bold value columns, while the rank circle is placed as a right-side column.
+The v0.3.0 stats card uses original-inspired stat content inside this project's cleaner rounded frame. Rows are rendered in a fixed invisible table-like layout with icon, label, and bold value columns, while the rank circle is placed as a right-side column.
 
 ### Stats Card Options
 
@@ -106,7 +162,7 @@ Example:
 ![Top languages](https://github-stats-generator-green.vercel.app/api/languages.svg?username=D-Naveenz&layout=compact&limit=8)
 ```
 
-The languages card aggregates language byte sizes from owned, non-fork repositories and sorts languages by total size.
+The languages card aggregates language byte sizes from owned, non-fork repositories and sorts languages by total size. The default `bar` layout shows each language with a progress bar, while `compact` gives a denser two-column summary.
 
 ### Language Layouts
 
@@ -266,6 +322,8 @@ Run locally:
 pnpm dev
 ```
 
+`pnpm dev` uses `tsx watch`, so source changes restart the local Express server automatically. Use `pnpm dev:compiled` when you specifically want to test the compiled `.dev-dist` runtime path.
+
 Open:
 
 ```txt
@@ -295,9 +353,9 @@ VS Code tasks are included for development, testing, formatting, and full valida
 | `PORT`                | No                       | `3000`              | Local dev server port.                                               |
 | `NODE_ENV`            | No                       | `development`       | Disables cache headers when set to `development`.                    |
 
-## What v0.2.4 Does Not Support
+## What v0.3.0 Does Not Support
 
-v0.2.4 intentionally does not support:
+v0.3.0 intentionally does not support:
 
 - Multilingual labels.
 - Repo pin cards.
