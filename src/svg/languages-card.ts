@@ -1,7 +1,8 @@
 import type { TopLanguage } from '../github/service.js'
 import type { LanguageCardQuery } from '../query.js'
-import { element, escapeXml } from './builder.js'
+import { escapeXml } from './builder.js'
 import { renderCard } from './card.js'
+import type { SvgChild, SvgNode } from './compiler/index.js'
 import { formatPercent } from './format.js'
 import { cardLayout, estimateTextWidth, titleBlockHeight } from './layout.js'
 import { resolveTheme } from './themes.js'
@@ -34,99 +35,112 @@ function topLanguages(languages: TopLanguage[], limit: number): TopLanguage[] {
     return languages.slice(0, limit)
 }
 
-function renderEmptyState(): string {
-    return element(
-        'text',
-        { x: 0, y: 0, class: 'small' },
-        'No language data found'
-    )
+function renderEmptyState(): SvgNode {
+    return {
+        tag: 'text',
+        attrs: { class: 'small' },
+        style: { x: 0, y: 0 },
+        children: ['No language data found'],
+    }
 }
 
 function renderBarLayout(
     languages: TopLanguage[],
     totalSize: number,
     options: LanguageCardOptions
-): string {
+): SvgNode[] {
     const theme = resolveTheme(options.theme, options)
 
-    return languages
-        .map((language, index) => {
-            const percent =
-                totalSize === 0 ? 0 : (language.size / totalSize) * 100
-            const y = index * barRowGap
-            const width = Math.max(2, (percent / 100) * barWidth)
-            return element(
-                'g',
-                { transform: `translate(0, ${y})` },
-                [
-                    element(
-                        'text',
-                        { x: 0, y: barLabelY, class: 'small' },
-                        escapeXml(language.name)
-                    ),
-                    element(
-                        'text',
-                        {
-                            x: barPercentX,
-                            y: barY + barHeight,
-                            class: 'muted',
-                            'text-anchor': 'end',
-                        },
-                        escapeXml(formatPercent(percent))
-                    ),
-                    element('rect', {
+    return languages.map((language, index) => {
+        const percent = totalSize === 0 ? 0 : (language.size / totalSize) * 100
+        const width = Math.max(2, (percent / 100) * barWidth)
+        return {
+            tag: 'g',
+            style: {
+                height: 0,
+                marginBottom: index === languages.length - 1 ? 0 : barRowGap,
+            },
+            children: [
+                {
+                    tag: 'text',
+                    attrs: { class: 'small' },
+                    style: { x: 0, y: barLabelY },
+                    children: [escapeXml(language.name)],
+                },
+                {
+                    tag: 'text',
+                    attrs: {
+                        class: 'muted',
+                        'text-anchor': 'end',
+                    },
+                    style: { x: barPercentX, y: barY + barHeight },
+                    children: [escapeXml(formatPercent(percent))],
+                },
+                {
+                    tag: 'rect',
+                    attrs: {
+                        rx: 4,
+                        fill: theme.barBgColor,
+                    },
+                    style: {
                         x: 0,
                         y: barY,
                         width: barWidth,
                         height: barHeight,
+                    },
+                },
+                {
+                    tag: 'rect',
+                    attrs: {
                         rx: 4,
-                        fill: theme.barBgColor,
-                    }),
-                    element('rect', {
+                        fill: normalizeColor(language.color),
+                    },
+                    style: {
                         x: 0,
                         y: barY,
                         width,
                         height: barHeight,
-                        rx: 4,
-                        fill: normalizeColor(language.color),
-                    }),
-                ].join('')
-            )
-        })
-        .join('')
+                    },
+                },
+            ],
+        }
+    })
 }
 
 function renderCompactLayout(
     languages: TopLanguage[],
     totalSize: number
-): string {
-    return languages
-        .map((language, index) => {
-            const percent =
-                totalSize === 0 ? 0 : (language.size / totalSize) * 100
-            const column = index % 2
-            const row = Math.floor(index / 2)
-            const x = column * (compactColumnWidth + compactColumnGap)
-            const y = row * compactRowGap
-            return element(
-                'g',
-                { transform: `translate(${x}, ${y})` },
-                [
-                    element('circle', {
+): SvgNode[] {
+    return languages.map((language, index) => {
+        const percent = totalSize === 0 ? 0 : (language.size / totalSize) * 100
+        const column = index % 2
+        const row = Math.floor(index / 2)
+        const x = column * (compactColumnWidth + compactColumnGap)
+        const y = row * compactRowGap
+        return {
+            tag: 'g',
+            style: { x, y },
+            children: [
+                {
+                    tag: 'circle',
+                    attrs: {
                         cx: 5,
                         cy: -4,
                         r: 5,
                         fill: normalizeColor(language.color),
-                    }),
-                    element(
-                        'text',
-                        { x: 18, y: 0, class: 'small' },
-                        escapeXml(`${language.name} ${formatPercent(percent)}`)
-                    ),
-                ].join('')
-            )
-        })
-        .join('')
+                    },
+                },
+                {
+                    tag: 'text',
+                    attrs: { class: 'small' },
+                    style: { x: 18, y: 0 },
+                    children: [
+                        escapeXml(`${language.name} ${formatPercent(percent)}`),
+                    ],
+                },
+            ],
+        }
+    })
 }
 
 function bodyMetrics(
@@ -172,7 +186,7 @@ export function renderLanguagesCard(
         (sum, language) => sum + language.size,
         0
     )
-    const body =
+    const body: SvgChild | SvgChild[] =
         visibleLanguages.length === 0
             ? renderEmptyState()
             : options.layout === 'compact'

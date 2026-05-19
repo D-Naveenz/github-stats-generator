@@ -1,8 +1,9 @@
 import type { ProfileStats } from '../github/service.js'
 import { calculateRank } from '../rank.js'
 import type { CommonCardOptions } from '../query.js'
-import { element, escapeXml } from './builder.js'
+import { escapeXml } from './builder.js'
 import { renderCard } from './card.js'
+import type { SvgChild, SvgNode } from './compiler/index.js'
 import { formatNumber } from './format.js'
 import { statIcons } from './icons.js'
 import { cardLayout, estimateTextWidth, titleBlockHeight } from './layout.js'
@@ -32,52 +33,57 @@ const valueColumnXWithoutIcons = 122
 const minTableWidth = 260
 
 function statRow(args: {
-    y: number
     label: string
     value: string
     icon: string
     showIcon: boolean
     valueX: number
-}): string {
-    const icon = args.showIcon
-        ? element(
-              'svg',
-              {
-                  x: 0,
-                  y: -13,
+    marginBottom: number
+}): SvgNode {
+    const icon: SvgNode | undefined = args.showIcon
+        ? {
+              tag: 'svg',
+              attrs: {
                   viewBox: '0 0 16 16',
-                  width: 16,
-                  height: 16,
                   class: 'icon',
                   'data-testid': 'icon',
               },
-              args.icon
-          )
-        : ''
+              style: {
+                  x: 0,
+                  y: -13,
+                  width: 16,
+                  height: 16,
+              },
+              children: [args.icon],
+          }
+        : undefined
     const labelX = args.showIcon ? 28 : 0
 
-    return element(
-        'g',
-        { transform: `translate(0, ${args.y})` },
-        [
+    return {
+        tag: 'g',
+        style: {
+            height: 0,
+            marginBottom: args.marginBottom,
+        },
+        children: [
             icon,
-            element(
-                'text',
-                { x: labelX, y: 0, class: 'stat-label' },
-                `${escapeXml(args.label)}:`
-            ),
-            element(
-                'text',
-                {
-                    x: args.valueX,
-                    y: 0,
+            {
+                tag: 'text',
+                attrs: { class: 'stat-label' },
+                style: { x: labelX, y: 0 },
+                children: [`${escapeXml(args.label)}:`],
+            },
+            {
+                tag: 'text',
+                attrs: {
                     class: 'stat-value',
                     'font-weight': 700,
                 },
-                escapeXml(args.value)
-            ),
-        ].join('')
-    )
+                style: { x: args.valueX, y: 0 },
+                children: [escapeXml(args.value)],
+            },
+        ].filter((child): child is SvgNode => child !== undefined),
+    }
 }
 
 function circleProgress(percentile: number): number {
@@ -98,53 +104,61 @@ function rankCircle(args: {
     options: CommonCardOptions
     x: number
     y: number
-}): string {
+}): SvgNode {
     const { stats, options } = args
     const theme = resolveTheme(options.theme, options)
     const rank = calculateRank(stats)
 
-    return element(
-        'g',
-        {
-            transform: `translate(${args.x}, ${args.y})`,
+    return {
+        tag: 'g',
+        attrs: {
             'data-testid': 'rank-circle',
         },
-        [
-            element('circle', {
-                cx: 0,
-                cy: 0,
-                r: rankCircleRadius,
-                fill: 'none',
-                stroke: theme.ringColor,
-                'stroke-width': rankCircleStrokeWidth,
-                'stroke-opacity': 0.2,
-            }),
-            element('circle', {
-                cx: 0,
-                cy: 0,
-                r: rankCircleRadius,
-                fill: 'none',
-                stroke: theme.ringColor,
-                'stroke-width': rankCircleStrokeWidth,
-                'stroke-linecap': 'round',
-                'stroke-dasharray': rankCircleCircumference,
-                'stroke-dashoffset': circleProgress(rank.percentile),
-                transform: 'rotate(-90)',
-            }),
-            element(
-                'text',
-                {
-                    x: 0,
-                    y: rankTextBaselineOffset(),
+        style: {
+            x: args.x,
+            y: args.y,
+        },
+        children: [
+            {
+                tag: 'circle',
+                attrs: {
+                    cx: 0,
+                    cy: 0,
+                    r: rankCircleRadius,
+                    fill: 'none',
+                    stroke: theme.ringColor,
+                    'stroke-width': rankCircleStrokeWidth,
+                    'stroke-opacity': 0.2,
+                },
+            },
+            {
+                tag: 'circle',
+                attrs: {
+                    cx: 0,
+                    cy: 0,
+                    r: rankCircleRadius,
+                    fill: 'none',
+                    stroke: theme.ringColor,
+                    'stroke-width': rankCircleStrokeWidth,
+                    'stroke-linecap': 'round',
+                    'stroke-dasharray': rankCircleCircumference,
+                    'stroke-dashoffset': circleProgress(rank.percentile),
+                    transform: 'rotate(-90)',
+                },
+            },
+            {
+                tag: 'text',
+                attrs: {
                     class: 'rank-text',
                     'font-size': rankTextFontSize,
                     'text-anchor': 'middle',
                     'data-testid': 'level-rank-icon',
                 },
-                escapeXml(rank.level)
-            ),
-        ].join('')
-    )
+                style: { x: 0, y: rankTextBaselineOffset() },
+                children: [escapeXml(rank.level)],
+            },
+        ],
+    }
 }
 
 export function renderStatsCard(
@@ -218,23 +232,26 @@ export function renderStatsCard(
         tableTop + Math.round(tableHeight / 2) - rankTableVisualOffset()
     const rows = statItems
         .filter((item) => !hidden.has(item.key))
-        .map((item, index) =>
+        .map((item) =>
             statRow({
-                y: index * options.lineHeight,
                 label: item.label,
                 value: formatNumber(item.value),
                 icon: item.icon,
                 showIcon: options.showIcons,
                 valueX,
+                marginBottom: options.lineHeight,
             })
         )
-        .join('')
-    const body = [
-        element('g', { transform: `translate(0, ${tableTop})` }, rows),
+    const body: SvgChild[] = [
+        {
+            tag: 'g',
+            style: { y: tableTop },
+            children: rows,
+        },
         options.hideRank
             ? ''
             : rankCircle({ stats, options, x: rankX, y: rankY }),
-    ].join('')
+    ]
     const rankWidth = options.hideRank
         ? 0
         : rankX + rankCircleRadius + rankCircleStrokeWidth / 2

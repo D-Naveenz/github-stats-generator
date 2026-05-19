@@ -1,7 +1,7 @@
 import { createRequire } from 'node:module'
 
-type AttributeValue = string | number | boolean | null | undefined
-type Attributes = Record<string, AttributeValue>
+export type AttributeValue = string | number | boolean | null | undefined
+export type Attributes = Record<string, AttributeValue>
 
 type SvgBuilderInstance = {
     elements: string[]
