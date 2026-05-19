@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.2.4 - 2026-05-19
+
+Bugfix release.
+
+- Standardized the deployment token environment variable as `GITHUB_TOKEN`.
+- Fixed Vercel Express template compatibility by default-exporting the Express app from `src/app.ts`.
+- Added explicit Vercel routing with `vercel.json`.
+- Added `.vercelignore` for local-only and generated artifacts.
+- Kept v0.2 stats-card rendering behavior unchanged.
+
 ## 0.2.0 - 2026-05-15
 
 - Upgraded the stats card to an original-inspired stat list inside this project's rounded frame.

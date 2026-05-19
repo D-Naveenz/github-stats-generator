@@ -16,7 +16,7 @@ This project is a smaller, modern alternative inspired by GitHub Readme Stats. I
 - [Self-Hosting](#self-hosting)
 - [Local Development](#local-development)
 - [Environment Variables](#environment-variables)
-- [What v0.2.0 Does Not Support](#what-v020-does-not-support)
+- [What v0.2.4 Does Not Support](#what-v024-does-not-support)
 
 ## Features
 
@@ -70,7 +70,7 @@ The stats card displays:
 - Contributed repository count.
 - Rank circle, visible by default.
 
-The v0.2.0 stats card uses original-inspired stat content inside this project's cleaner rounded frame. Rows are rendered in a fixed invisible table-like layout with icon, label, and bold value columns, while the rank circle is placed as a right-side column.
+The v0.2.4 stats card uses original-inspired stat content inside this project's cleaner rounded frame. Rows are rendered in a fixed invisible table-like layout with icon, label, and bold value columns, while the rank circle is placed as a right-side column.
 
 ### Stats Card Options
 
@@ -295,9 +295,9 @@ VS Code tasks are included for development, testing, formatting, and full valida
 | `PORT`                | No                       | `3000`              | Local dev server port.                                               |
 | `NODE_ENV`            | No                       | `development`       | Disables cache headers when set to `development`.                    |
 
-## What v0.2.0 Does Not Support
+## What v0.2.4 Does Not Support
 
-v0.2.0 intentionally does not support:
+v0.2.4 intentionally does not support:
 
 - Multilingual labels.
 - Repo pin cards.
