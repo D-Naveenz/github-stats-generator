@@ -1,6 +1,6 @@
 export const cardLayout = {
     padding: 24,
-    paddingBottom: 16,
+    paddingBottom: 24,
     titleFontSize: 18,
     titleBaselineOffset: 18,
     titleToContentGap: 34,

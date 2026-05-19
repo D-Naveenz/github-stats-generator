@@ -11,13 +11,15 @@ type LanguageCardOptions = LanguageCardQuery['card']
 const barWidth = 300
 const barPercentGap = 48
 const barPercentX = barWidth + barPercentGap
-const barLayoutWidth = barPercentX + 38
+const barLayoutWidth = barPercentX
 const barRowGap = 35
 const barLabelToBarGap = 7
 const barLabelY = 0
 const barY = barLabelY + barLabelToBarGap
 const barHeight = 8
 const barRowHeight = barY + barHeight
+const barVisibleTop = -12
+const barVisibleBottom = barRowHeight
 const compactColumnGap = 28
 const compactColumnWidth = 170
 const compactRowGap = 28
@@ -130,11 +132,12 @@ function renderCompactLayout(
 function bodyMetrics(
     visibleLanguages: TopLanguage[],
     options: LanguageCardOptions
-): { width: number; height: number } {
+): { width: number; height: number; visibleTop: number } {
     if (visibleLanguages.length === 0) {
         return {
             width: estimateTextWidth('No language data found', 12),
             height: emptyStateHeight,
+            visibleTop: -12,
         }
     }
 
@@ -146,12 +149,17 @@ function bodyMetrics(
                 columnCount * compactColumnWidth +
                 (columnCount - 1) * compactColumnGap,
             height: (rowCount - 1) * compactRowGap + compactRowHeight,
+            visibleTop: -12,
         }
     }
 
     return {
         width: barLayoutWidth,
-        height: (visibleLanguages.length - 1) * barRowGap + barRowHeight,
+        height:
+            (visibleLanguages.length - 1) * barRowGap +
+            barVisibleBottom -
+            barVisibleTop,
+        visibleTop: barVisibleTop,
     }
 }
 
@@ -184,6 +192,7 @@ export function renderLanguagesCard(
             metrics.height +
             cardLayout.paddingBottom
     )
+    const contentY = cardLayout.padding + titleHeight
 
     return renderCard({
         width: cardWidth,
@@ -195,7 +204,7 @@ export function renderLanguagesCard(
         options,
         body,
         contentX: cardLayout.padding,
-        contentY: cardLayout.padding + titleHeight,
+        contentY,
         titleX: cardLayout.padding,
         titleY: cardLayout.padding + cardLayout.titleBaselineOffset,
     })

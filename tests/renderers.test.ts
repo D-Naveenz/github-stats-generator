@@ -104,9 +104,29 @@ describe('SVG renderers', () => {
 
         expectValidSvg(svg)
         expect(svg).toContain('width="416"')
-        expect(svg).toContain('height="134"')
+        expect(svg).toContain('height="142"')
         expect(svg).toContain('TypeScript 70.0%')
         expect(svg).toContain('HTML 10.0%')
+    })
+
+    it('renders a bar languages card with visible padding bounds', () => {
+        const svg = renderLanguagesCard(
+            [
+                { name: 'C#', color: '#178600', size: 54 },
+                { name: 'Rust', color: '#dea584', size: 25 },
+                { name: 'JavaScript', color: '#f1e05a', size: 8 },
+                { name: 'TypeScript', color: '#3178c6', size: 8 },
+                { name: 'ShaderLab', color: '#222c37', size: 3 },
+                { name: 'Typst', color: '#239dad', size: 2 },
+            ],
+            { ...cardOptions, layout: 'bar', limit: 6 }
+        )
+
+        expectValidSvg(svg)
+        expect(svg).toContain('width="396"')
+        expect(svg).toContain('height="302"')
+        expect(svg).toContain('54.0%')
+        expect(svg).toContain('Typst')
     })
 
     it('renders a valid error card', () => {
