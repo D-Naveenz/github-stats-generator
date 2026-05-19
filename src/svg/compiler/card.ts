@@ -75,5 +75,5 @@ export function renderCompilerCardContent(args: CompilerCardArgs): string {
         contentNode(args),
     ].filter((node): node is SvgNode => node !== undefined)
 
-    return compileSvg(nodes, [], styles)
+    return compileSvg(nodes, styles)
 }

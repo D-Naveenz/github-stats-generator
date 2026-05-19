@@ -50,7 +50,7 @@ describe('SVG renderers', () => {
         expect(svg).toContain('Contributed to')
         expect(svg).toContain('data-testid="icon"')
         expect(svg).toContain('data-testid="rank-circle"')
-        expect(svg).toContain('class="stat-value"')
+        expect(svg).toContain('font-weight="700"')
     })
 
     it('hides configured stats and rank circle', () => {

@@ -1,11 +1,9 @@
 import { describe, expect, it } from 'vitest'
 import {
     compileSvg,
-    matchesSelector,
     parseSpacing,
     resolveMargin,
     resolveNodeResource,
-    resolveStyle,
     type StyleResources,
     type SvgNode,
 } from '../src/svg/compiler/index.js'
@@ -47,39 +45,6 @@ describe('SVG compiler spacing', () => {
     })
 })
 
-describe('SVG compiler selectors', () => {
-    it('matches class, id, tag, and combined selectors', () => {
-        const node: SvgNode = {
-            tag: 'rect',
-            attrs: { id: 'card', class: 'surface primary' },
-        }
-
-        expect(matchesSelector(node, '.surface')).toBe(true)
-        expect(matchesSelector(node, '#card')).toBe(true)
-        expect(matchesSelector(node, 'rect')).toBe(true)
-        expect(matchesSelector(node, 'rect.primary')).toBe(true)
-        expect(matchesSelector(node, 'text.primary')).toBe(false)
-    })
-
-    it('resolves rule order before inline style', () => {
-        const node: SvgNode = {
-            tag: 'rect',
-            attrs: { class: 'surface' },
-            style: { x: 9 },
-        }
-        const style = resolveStyle(node, [
-            { selector: 'rect', style: { x: 1, y: 2 } },
-            { selector: '.surface', style: { x: 4, width: 100 } },
-        ])
-
-        expect(style).toEqual({
-            x: 9,
-            y: 2,
-            width: 100,
-        })
-    })
-})
-
 describe('SVG compiler style resources', () => {
     const resources: StyleResources = {
         textBase: {
@@ -88,7 +53,7 @@ describe('SVG compiler style resources', () => {
         },
         cardTitle: {
             basedOn: 'textBase',
-            attrs: { class: 'card-title', fill: '#0969da' },
+            attrs: { fill: '#0969da' },
             layout: { marginBottom: 12 },
         },
         circularA: { basedOn: 'circularB' },
@@ -104,12 +69,11 @@ describe('SVG compiler style resources', () => {
                     children: ['Title'],
                 },
             ],
-            [],
             resources
         )
 
         expect(svg).toContain(
-            '<text fill="#0969da" font="500 12px sans-serif" class="card-title" x="2">Title</text>'
+            '<text fill="#0969da" font="500 12px sans-serif" x="2">Title</text>'
         )
     })
 
@@ -125,7 +89,6 @@ describe('SVG compiler style resources', () => {
             attrs: {
                 fill: '#0969da',
                 font: '500 12px sans-serif',
-                class: 'card-title',
             },
             layout: {
                 x: 2,
@@ -134,14 +97,14 @@ describe('SVG compiler style resources', () => {
             },
         })
 
-        const svg = compileSvg([node], [], resources)
+        const svg = compileSvg([node], resources)
         expect(svg).toContain('fill="#222222"')
         expect(svg).toContain('x="8"')
     })
 
     it('rejects circular basedOn chains', () => {
         expect(() =>
-            compileSvg([{ tag: 'text', styleKey: 'circularA' }], [], resources)
+            compileSvg([{ tag: 'text', styleKey: 'circularA' }], resources)
         ).toThrow('Circular SVG style resource inheritance')
     })
 })
@@ -205,23 +168,6 @@ describe('SVG compiler layout', () => {
         expect(svg).toContain('<rect width="10" height="8" x="3" y="4">')
     })
 
-    it('applies selector styles before compiling positions', () => {
-        const svg = compileSvg(
-            [
-                {
-                    tag: 'rect',
-                    selectors: ['.surface'],
-                    style: { y: 4 },
-                },
-            ],
-            [{ selector: '.surface', style: { x: 12, width: 20, height: 10 } }]
-        )
-
-        expect(svg).toContain(
-            '<rect class="surface" width="20" height="10" x="12" y="4">'
-        )
-    })
-
     it('uses styleKey resources for reusable layout', () => {
         const svg = compileSvg(
             [
@@ -236,16 +182,19 @@ describe('SVG compiler layout', () => {
                     children: [{ tag: 'text', children: ['Next'] }],
                 },
             ],
-            [],
             {
                 stackItem: {
-                    attrs: { class: 'stack-item' },
+                    attrs: { 'data-style-key': 'stackItem' },
                     layout: { height: 10, marginBottom: 5 },
                 },
             }
         )
 
-        expect(svg).toContain('class="stack-item" transform="translate(0, 0)"')
-        expect(svg).toContain('class="stack-item" transform="translate(0, 15)"')
+        expect(svg).toContain(
+            'data-style-key="stackItem" transform="translate(0, 0)"'
+        )
+        expect(svg).toContain(
+            'data-style-key="stackItem" transform="translate(0, 15)"'
+        )
     })
 })

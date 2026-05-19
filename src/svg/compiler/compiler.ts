@@ -1,19 +1,16 @@
 import { element } from '../builder.js'
 import { resolveNodeResource } from './resources.js'
-import { injectSelectorAttributes, resolveStyle } from './selectors.js'
 import { resolveMargin, resolvePadding } from './spacing.js'
 import type { Attributes } from '../builder.js'
 import type {
     LayoutStyle,
     Spacing,
-    StyleRule,
     StyleResources,
     SvgChild,
     SvgNode,
 } from './types.js'
 
 type CompileContext = {
-    rules: readonly StyleRule[]
     resources: StyleResources
     offsetX: number
     offsetY: number
@@ -42,11 +39,11 @@ function positionedNode(
     const resource = resolveNodeResource(node, context.resources)
     const attrs = {
         ...resource.attrs,
-        ...injectSelectorAttributes(node),
+        ...(node.attrs ?? {}),
     }
     const style = {
         ...resource.layout,
-        ...resolveStyle(node, context.rules),
+        ...(node.style ?? {}),
     }
     const margin = resolveMargin(style)
     const padding = resolvePadding(style)
@@ -174,11 +171,9 @@ function compileNode(
 
 export function compileSvg(
     children: readonly SvgChild[],
-    rules: readonly StyleRule[] = [],
     resources: StyleResources = {}
 ): string {
     return compileChildren(children, {
-        rules,
         resources,
         offsetX: 0,
         offsetY: 0,

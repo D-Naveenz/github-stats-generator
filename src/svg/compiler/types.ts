@@ -36,13 +36,7 @@ export type SvgNode = {
     styleKey?: SvgStyleKey
     attrs?: Attributes
     children?: SvgChild[]
-    selectors?: string[]
     style?: LayoutStyle
-}
-
-export type StyleRule = {
-    selector: string
-    style: LayoutStyle
 }
 
 export type Spacing = {
