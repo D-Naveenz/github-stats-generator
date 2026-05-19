@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.3.0 - 2026-05-19
+
+Documentation and language-card polish release.
+
+- Added README live demos for all three visible card surfaces: stats, top languages bar layout, and top languages compact layout.
+- Updated the homepage to preview both language-card layouts side by side using the current request host.
+- Refined language-card layout with shared SVG layout metrics, visible padding bounds, longer bars, aligned percentages, and clearer row spacing.
+- Added `tsx watch` hot reload for local development while preserving the compiled runtime path as `pnpm dev:compiled`.
+- Added renderer and route regression tests for language-card dimensions, escaping, homepage demo URLs, and Vercel-compatible app exports.
+
 ## 0.2.4 - 2026-05-19
 
 Bugfix release.
