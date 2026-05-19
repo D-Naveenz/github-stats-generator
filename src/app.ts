@@ -99,3 +99,5 @@ export function createApp(options: CreateAppOptions = {}): Express {
 
     return app
 }
+
+export default createApp()

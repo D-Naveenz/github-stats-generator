@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.2.4 - 2026-05-19
+
+Bugfix release.
+
+- Standardized the deployment token environment variable as `GITHUB_TOKEN`.
+- Fixed Vercel Express template compatibility by default-exporting the Express app from `src/app.ts`.
+- Added explicit Vercel routing with `vercel.json`.
+- Added `.vercelignore` for local-only and generated artifacts.
+- Kept v0.2 stats-card rendering behavior unchanged.
+
 ## 0.2.0 - 2026-05-15
 
 - Upgraded the stats card to an original-inspired stat list inside this project's rounded frame.
@@ -8,6 +18,7 @@
 - Added core original-inspired themes: `radical`, `merko`, `gruvbox`, `onedark`, and `cobalt`.
 - Extended GitHub stats fetching with contribution commit count and contributed repository count.
 - Polished stats-card layout with fixed stat/value columns, dynamic card dimensions, centered rank text, tighter rank placement, and balanced padding.
+- Fixed Vercel Express template compatibility by default-exporting the Express app from `src/app.ts`.
 
 ## 0.1.0 - 2026-05-15
 
@@ -15,7 +26,7 @@ Initial usable release.
 
 - Added English-only SVG cards for profile stats and top languages.
 - Added clean endpoints: `/api/stats.svg` and `/api/languages.svg`.
-- Added GitHub GraphQL access through server-side `GH_PAT`.
+- Added GitHub GraphQL access through server-side `GITHUB_TOKEN`.
 - Added opt-in private-visible stats with `PRIVATE_STATS_USERS` allowlist.
 - Added built-in themes, hex color overrides, hidden title, and hidden border options.
 - Added Vercel-friendly cache headers and SVG error cards.

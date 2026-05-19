@@ -15,7 +15,7 @@ function parsePrivateStatsUsers(value: string | undefined): Set<string> {
 
 export function loadConfig(env: NodeJS.ProcessEnv = process.env): AppConfig {
     return {
-        githubToken: env.GH_PAT,
+        githubToken: env.GITHUB_TOKEN,
         nodeEnv: env.NODE_ENV ?? 'production',
         privateStatsUsers: parsePrivateStatsUsers(env.PRIVATE_STATS_USERS),
     }

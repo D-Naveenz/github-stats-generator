@@ -16,7 +16,7 @@ This project is a smaller, modern alternative inspired by GitHub Readme Stats. I
 - [Self-Hosting](#self-hosting)
 - [Local Development](#local-development)
 - [Environment Variables](#environment-variables)
-- [What v0.2.0 Does Not Support](#what-v020-does-not-support)
+- [What v0.2.4 Does Not Support](#what-v024-does-not-support)
 
 ## Features
 
@@ -28,7 +28,7 @@ This project is a smaller, modern alternative inspired by GitHub Readme Stats. I
 - Optional hidden title and border.
 - Public stats by default.
 - Private-visible stats only when explicitly requested and allowlisted by the deployment owner.
-- GitHub GraphQL API access through a server-side `GH_PAT`.
+- GitHub GraphQL API access through a server-side `GITHUB_TOKEN`.
 - Vercel-friendly cache headers.
 - SVG error cards instead of JSON errors for README embeds.
 
@@ -70,7 +70,7 @@ The stats card displays:
 - Contributed repository count.
 - Rank circle, visible by default.
 
-The v0.2.0 stats card uses original-inspired stat content inside this project's cleaner rounded frame. Rows are rendered in a fixed invisible table-like layout with icon, label, and bold value columns, while the rank circle is placed as a right-side column.
+The v0.2.4 stats card uses original-inspired stat content inside this project's cleaner rounded frame. Rows are rendered in a fixed invisible table-like layout with icon, label, and bold value columns, while the rank circle is placed as a right-side column.
 
 ### Stats Card Options
 
@@ -181,7 +181,7 @@ Public stats are the default and are safe for any requested username.
 
 Private-visible stats require all of the following:
 
-- The deployment has a `GH_PAT`.
+- The deployment has a `GITHUB_TOKEN`.
 - The requested URL includes `include_private=true`.
 - The requested username is listed in `PRIVATE_STATS_USERS`.
 - The configured token can actually see the requested private data.
@@ -226,15 +226,15 @@ The project is designed for Vercel, but it is a standard Express app and can run
 
 1. Fork or clone this repository.
 2. Import it into Vercel.
-3. Add `GH_PAT` in the Vercel project environment variables.
+3. Add `GITHUB_TOKEN` in the Vercel project environment variables.
 4. Optionally add `PRIVATE_STATS_USERS`.
 5. Deploy from the main branch.
 
-The exported Express app lives in `src/index.ts`, which Vercel can use as the server entry.
+The exported Express app lives in `src/app.ts`, which Vercel can use as the server entry. `src/index.ts` re-exports the same app for local server startup.
 
 ### GitHub PAT
 
-Use a fine-grained or classic GitHub Personal Access Token as the server-side `GH_PAT`.
+Use a fine-grained or classic GitHub Personal Access Token as the server-side `GITHUB_TOKEN`.
 
 Recommended minimum:
 
@@ -255,7 +255,7 @@ pnpm install
 Create a local `.env` from `.env.example`:
 
 ```env
-GH_PAT=github_pat_your_token_here
+GITHUB_TOKEN=github_pat_your_token_here
 PRIVATE_STATS_USERS=D-Naveenz
 PORT=3000
 ```
@@ -290,14 +290,14 @@ VS Code tasks are included for development, testing, formatting, and full valida
 
 | Variable              | Required                 | Example             | Description                                                          |
 | --------------------- | ------------------------ | ------------------- | -------------------------------------------------------------------- |
-| `GH_PAT`              | Yes for live GitHub data | `github_pat_...`    | Server-side GitHub token used for GraphQL API calls.                 |
+| `GITHUB_TOKEN`        | Yes for live GitHub data | `github_pat_...`    | Server-side GitHub token used for GraphQL API calls.                 |
 | `PRIVATE_STATS_USERS` | No                       | `D-Naveenz,octocat` | Comma-separated usernames allowed to request `include_private=true`. |
 | `PORT`                | No                       | `3000`              | Local dev server port.                                               |
 | `NODE_ENV`            | No                       | `development`       | Disables cache headers when set to `development`.                    |
 
-## What v0.2.0 Does Not Support
+## What v0.2.4 Does Not Support
 
-v0.2.0 intentionally does not support:
+v0.2.4 intentionally does not support:
 
 - Multilingual labels.
 - Repo pin cards.
