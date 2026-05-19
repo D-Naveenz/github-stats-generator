@@ -8,11 +8,16 @@ import { resolveTheme } from './themes.js'
 
 type LanguageCardOptions = LanguageCardQuery['card']
 
-const barLayoutWidth = 360
-const barWidth = 250
-const barPercentX = barLayoutWidth
-const barRowGap = 36
-const barRowHeight = 22
+const barWidth = 300
+const barPercentGap = 48
+const barPercentX = barWidth + barPercentGap
+const barLayoutWidth = barPercentX + 38
+const barRowGap = 35
+const barLabelToBarGap = 7
+const barLabelY = 0
+const barY = barLabelY + barLabelToBarGap
+const barHeight = 8
+const barRowHeight = barY + barHeight
 const compactColumnGap = 28
 const compactColumnWidth = 170
 const compactRowGap = 28
@@ -54,14 +59,14 @@ function renderBarLayout(
                 [
                     element(
                         'text',
-                        { x: 0, y: 0, class: 'small' },
+                        { x: 0, y: barLabelY, class: 'small' },
                         escapeXml(language.name)
                     ),
                     element(
                         'text',
                         {
                             x: barPercentX,
-                            y: 0,
+                            y: barY + barHeight,
                             class: 'muted',
                             'text-anchor': 'end',
                         },
@@ -69,17 +74,17 @@ function renderBarLayout(
                     ),
                     element('rect', {
                         x: 0,
-                        y: 10,
+                        y: barY,
                         width: barWidth,
-                        height: 8,
+                        height: barHeight,
                         rx: 4,
                         fill: theme.barBgColor,
                     }),
                     element('rect', {
                         x: 0,
-                        y: 10,
+                        y: barY,
                         width,
-                        height: 8,
+                        height: barHeight,
                         rx: 4,
                         fill: normalizeColor(language.color),
                     }),
